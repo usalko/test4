@@ -1,0 +1,35 @@
+version: '3.9'
+
+services:
+
+  test4:
+    image: usalko/test4:v1
+    restart: always
+    mem_limit: 256m
+    environment:
+      TOKEN: ${TOKEN}
+      SERVICE_HTTP_PORT: $SERVICE_HTTP_PORT
+    volumes:
+      - .logs/test4:/var/log
+      - .tmp/test4:/tmp
+      - type: bind
+        source: .history/test4/.bash_history
+        target: /root/.ash_history
+
+  front:
+    image: usalko/test4:front
+    restart: always
+    mem_limit: 64m
+    volumes:
+      - .logs/nginx:/var/log
+      - .tmp/nginx:/tmp
+      - type: bind
+        source: ./nginx.conf
+        target: /etc/nginx/nginx.conf
+    depends_on:
+      - test4
+    environment:
+      EXPOSE_PORT: ${HTTP_PORT}
+    ports:
+      - "${HTTP_PORT}:80"
+

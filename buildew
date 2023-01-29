@@ -1,0 +1,249 @@
+#!/bin/bash
+
+PYTHON_VERSION=3.11
+COMMAND=$1
+while [[ "$#" -gt 0 ]]; do
+    case $1 in
+        --python-version)
+            PYTHON_VERSION="$2"
+            shift
+            shift
+        ;;
+        *)
+            COMMAND=$1
+            shift
+            break
+        ;;
+    esac
+    shift
+done
+
+PYTHON=python$PYTHON_VERSION
+# CHECK PYTHON 3
+if command -v "$PYTHON" &>/dev/null; then
+    echo Python3 available
+else
+    echo Python3 not available, please install it or add to the PATH variable
+    exit 1
+fi
+
+# CHECK PIP
+if command -v "$PYTHON" -m pip &>/dev/null; then
+    echo Pip available
+else
+    echo Pip not available, please install it or add to the PATH variable
+    exit 1
+fi
+
+# CHECK VIRTUALENV COMMAND
+if command -v "$PYTHON" -m venv &>/dev/null; then
+    echo Venv command available
+else
+    echo Venv not available, please install it [For example: python3 -m pip install python-venv]
+    exit 1
+fi
+
+# CHECK VENV NOT EXISTS
+if [ ! -d .venv ]; then
+    
+    $PYTHON -m venv .venv
+    if [ ! -d .pip ]; then
+        mkdir .pip
+        curl https://bootstrap.pypa.io/get-pip.py -o .pip/get-pip.py
+    fi
+    .venv/bin/python3 .pip/get-pip.py
+    .venv/bin/pip3 install -r service/requirements.txt
+fi
+
+if [ -f '.env' ]; then
+    echo Use .env file to read sensitive information
+    while IPS='=' read -r key _; do
+        eval "${key}"
+    done <'.env'
+else
+    # REGENERATE SENSITIVE INFO FROM TEMPLATE
+    cat >'.env' <<EOF
+PYTHONPATH=.
+SERVICE_HTTP_HOST=localhost
+SERVICE_HTTP_PORT=8000
+HTTP_PORT=80
+EOF
+fi
+
+echo EXECUTE
+echo "=========== $COMMAND"
+echo "$COMMAND ==========="
+echo COMMAND
+
+SERVICES=( 'test4' 'front' )
+
+
+if [ "$COMMAND" == "redeps" ]; then
+    echo "Reinstall dependencies"
+    .venv/bin/pip3 install -r service/requirements.txt
+fi
+
+if [ "$COMMAND" == "clean" ]; then
+    echo "Clean temporary folders"
+    find . -name __pycache__ -print0 | xargs -0 rm -fr
+fi
+
+#                                    #
+# DOCKER INFRASTRACTURE AND COMMANDS #
+#                                    #
+
+function docker_build {
+    echo "Build docker image $1 from $2"
+    mkdir -p .prebuild
+    docker build -t "$1" -f "$2" "$3" || exit 1
+    rm -fr .prebuild
+}
+
+function build {
+    SERVICE=test4
+    SERVICE_IMAGE_NAME=usalko/$SERVICE:v1
+    docker_build $SERVICE_IMAGE_NAME 'service/Dockerfile' '.' || exit 1
+    # Now run a command in a throwaway container that uses volumes and makes changes:
+    # mkdir -p .data/front/admin/static || exit 1
+    # cp -R static/* .data/front/admin/static
+
+    # # Remove container if it is running
+    # docker rm ${SERVICE}-temp
+
+    # docker run \
+    # --env DJANGO_PRODUCTION=True \
+    # --mount type=bind,source=${PWD}/media,destination=/${SERVICE}/media \
+    # --mount type=bind,source=${PWD}/.data/front/admin/static,destination=/${SERVICE}/static \
+    # --name ${SERVICE}-temp ${SERVICE_IMAGE_NAME} python3 manage.py collectstatic --noinput
+    
+    # docker container stop ${SERVICE}-temp
+
+    # # Replace the original image with the result:
+    # # (reverting CMD to whatever it was, otherwise it will be set to /some/post-configure/command)
+    # # docker commit --change="CMD bash" ${SERVICE}-temp ${SERVICE_IMAGE_NAME}
+    
+    # # Delete the temporary container:
+    # docker rm ${SERVICE}-temp
+
+    SERVICE=front
+    SERVICE_IMAGE_NAME=usalko/$SERVICE:front
+    docker_build $SERVICE_IMAGE_NAME 'Dockerfile' '.' || exit 1
+}
+
+if [ "$COMMAND" == "build" ]; then
+    build
+fi
+
+if [ "$COMMAND" == "run" ]; then
+    echo 'Run site'
+    export PYTHONPATH=${PYTHONPATH}
+    export SERVICE_HTTP_PORT
+    export SERVICE_HTTP_HOST
+    .venv/bin/uvicorn --port "${SERVICE_HTTP_PORT}" --host "${SERVICE_HTTP_HOST}" service.test4:app --reload
+fi
+
+function check_folder {
+    FOLDER=$1
+    mkdir -p "$FOLDER" || exit 1
+    chmod a+rwx "$FOLDER"
+    for SERVICE in "${SERVICES[@]}"; do
+        mkdir -p "$FOLDER/$SERVICE" || exit 1
+        chmod a+rwx "$FOLDER/$SERVICE"
+    done
+}
+
+function check_history_folder {
+    FOLDER=.history
+    mkdir -p $FOLDER || exit 1
+    chmod a+rwx $FOLDER
+    for SERVICE in "${SERVICES[@]}"; do
+        mkdir -p "$FOLDER/$SERVICE" || exit 1
+        chmod a+rwx "$FOLDER/$SERVICE"
+        touch "$FOLDER/$SERVICE/.bash_history"
+        chmod a+rwx "$FOLDER/$SERVICE/.bash_history"
+    done
+}
+
+function start {
+    # Check the data folders
+    check_folder .data
+    # Tune images folder
+    # mkdir -p .data/front/images || exit 1
+    # chmod a+rwx .data/front/images
+    # Tune static folder
+    # mkdir -p .data/front/admin/static || exit 1
+    # chmod a+rwx .data/front/admin/static
+    
+    # Sync Images, TODO: put on s3 storage
+    # cp back/app/static/images/photo_2021-11-10_11-15-00.jpg .data/front/images/cover
+    
+    # Check the temporary folders
+    check_folder .tmp
+    
+    # Check the logger folders
+    check_folder .logs
+    # Tune front folders
+    # mkdir -p .logs/front/nginx || exit 1
+    # chmod a+rwx .logs/front/nginx
+    
+    # Check the home folders
+    check_history_folder
+    
+    if [ "$1" == "" ]; then
+        docker-compose up
+    else
+        docker-compose up "$@"
+    fi
+}
+
+if [ "$COMMAND" == "up" ] || [ "$COMMAND" == "start" ] ; then
+    echo 'Run docker images'
+    
+    start "$@"
+    
+fi
+
+function stop {
+    if [ "$1" == "" ]; then
+        docker-compose down -v
+    else
+        docker-compose stop "$@"
+    fi
+}
+
+if [ "$COMMAND" == "stop" ] || [ "$COMMAND" == "down" ] || [ "$COMMAND" == "finish" ] ; then
+    echo 'Stop docker images'
+    
+    stop "$@"
+fi
+
+if [ "$COMMAND" == "restart" ] ; then
+    echo 'Restart services or whole system'
+    stop "$@"
+    start "$@"
+fi
+
+if [ "$COMMAND" == "log" ] ; then
+    if [ "$*" == "" ]; then
+        echo 'Show logs tail <= 10000 entries'
+        docker-compose logs -f --tail 10000
+    else
+        echo "Show logs (docker compose logs -f $*)"
+        docker-compose logs -f "$@"
+    fi
+fi
+if [ "$COMMAND" == "logs" ] ; then
+    if [ "$*" == "" ]; then
+        echo 'Show logs with timestamp tail <= 10000 entries'
+        docker-compose logs -f --tail 10000 --timestamps
+    else
+        echo "Show logs with timestamp (docker compose logs -f --timestamps $*)"
+        docker-compose logs -f --timestamps "$@"
+    fi
+fi
+
+# =================================================================================================
+
+AVAILABLE_COMMANDS="run build up start stop down finish restart manage redeps clean log logs"
+echo ''
+[[ $AVAILABLE_COMMANDS =~ (^| )$COMMAND($| ) ]] && echo 'Ok' || echo 'Unknown command: ' "$COMMAND" && echo 'Available commands are: ' "$AVAILABLE_COMMANDS"

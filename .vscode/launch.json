@@ -5,7 +5,18 @@
     "version": "0.2.0",
     "configurations": [
         {
-            "name": "Launch via NPM",
+            "name": "Service: Development",
+            "type": "python",
+            "request": "launch",
+            "module": "uvicorn",
+            "args": [
+                "service.test4:app"
+            ],
+            "jinja": true,
+            "justMyCode": false
+        },
+        {
+            "name": "Front: Development",
             "request": "launch",
             "runtimeArgs": [
                 "run-script",
@@ -16,6 +27,6 @@
                 "<node_internals>/**"
             ],
             "type": "node"
-        }
+        },
     ]
 }
