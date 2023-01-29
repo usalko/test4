@@ -134,12 +134,23 @@ if [ "$COMMAND" == "build" ]; then
     build
 fi
 
-if [ "$COMMAND" == "run" ]; then
-    echo 'Run site'
+# if [ "$COMMAND" == "run" ]; then
+#     echo 'Run site'
+#     export PYTHONPATH=${PYTHONPATH}
+#     export SERVICE_HTTP_PORT
+#     export SERVICE_HTTP_HOST
+#     .venv/bin/uvicorn --port "${SERVICE_HTTP_PORT}" --host "${SERVICE_HTTP_HOST}" service.test4:app --reload
+# fi
+
+if [ "$COMMAND" == "manage" ]; then
+    echo Run manage.py script manage.py "$@"
+    # Sample: ./buildew manage loaddata app_moods/fixtures/geometry_shapes.yaml
+    DJANGO_SECRET_KEY=$(.venv/bin/python3 -c 'from django.core.management.utils import get_random_secret_key; print(get_random_secret_key())')
+    export DJANGO_SECRET_KEY
+    export DJANGO_DEBUG=True
     export PYTHONPATH=${PYTHONPATH}
-    export SERVICE_HTTP_PORT
-    export SERVICE_HTTP_HOST
-    .venv/bin/uvicorn --port "${SERVICE_HTTP_PORT}" --host "${SERVICE_HTTP_HOST}" service.test4:app --reload
+    
+    .venv/bin/python3 manage.py "$@"
 fi
 
 function check_folder {

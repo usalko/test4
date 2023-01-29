@@ -8,11 +8,11 @@
             "name": "Service: Development",
             "type": "python",
             "request": "launch",
-            "module": "uvicorn",
+            "program": "${workspaceFolder}/service/manage.py",
             "args": [
-                "service.test4:app"
+                "runserver"
             ],
-            "jinja": true,
+            "django": true,
             "justMyCode": false
         },
         {
