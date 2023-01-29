@@ -64,6 +64,9 @@ else
     # REGENERATE SENSITIVE INFO FROM TEMPLATE
     cat >'.env' <<EOF
 PYTHONPATH=.
+DOCKER_TAG_SUFFIX=
+TOKEN=
+DJANGO_SECRET_KEY=
 SERVICE_HTTP_HOST=localhost
 SERVICE_HTTP_PORT=8000
 HTTP_PORT=80
@@ -75,7 +78,7 @@ echo "=========== $COMMAND"
 echo "$COMMAND ==========="
 echo COMMAND
 
-SERVICES=( 'test4' 'front' )
+SERVICES=( 'postgresdb' 'service' 'front' )
 
 
 if [ "$COMMAND" == "redeps" ]; then
@@ -101,8 +104,8 @@ function docker_build {
 
 function build {
     SERVICE=test4
-    SERVICE_IMAGE_NAME=usalko/$SERVICE:v1
-    docker_build $SERVICE_IMAGE_NAME 'service/Dockerfile' '.' || exit 1
+    SERVICE_IMAGE_NAME=usalko/$SERVICE:v1${DOCKER_TAG_SUFFIX}
+    docker_build "$SERVICE_IMAGE_NAME" 'service/Dockerfile' '.' || exit 1
     # Now run a command in a throwaway container that uses volumes and makes changes:
     # mkdir -p .data/front/admin/static || exit 1
     # cp -R static/* .data/front/admin/static
@@ -125,9 +128,8 @@ function build {
     # # Delete the temporary container:
     # docker rm ${SERVICE}-temp
 
-    SERVICE=front
-    SERVICE_IMAGE_NAME=usalko/$SERVICE:front
-    docker_build $SERVICE_IMAGE_NAME 'Dockerfile' '.' || exit 1
+    SERVICE_IMAGE_NAME=usalko/$SERVICE:front${DOCKER_TAG_SUFFIX}
+    docker_build "$SERVICE_IMAGE_NAME" 'Dockerfile' '.' || exit 1
 }
 
 if [ "$COMMAND" == "build" ]; then
@@ -194,8 +196,8 @@ function start {
     # Check the logger folders
     check_folder .logs
     # Tune front folders
-    # mkdir -p .logs/front/nginx || exit 1
-    # chmod a+rwx .logs/front/nginx
+    mkdir -p .logs/front/nginx || exit 1
+    chmod a+rwx .logs/front/nginx
     
     # Check the home folders
     check_history_folder

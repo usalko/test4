@@ -35,3 +35,4 @@ __py_cache__
 *.db
 *.sqlite3
 
+.history

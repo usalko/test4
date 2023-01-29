@@ -2,13 +2,35 @@ version: '3.9'
 
 services:
 
-  test4:
-    image: usalko/test4:v1
+  # postgresdb:
+  #   image: postgres:alpine
+  #   restart: always
+  #   mem_limit: 256m
+  #   environment:
+  #     POSTGRES_DB: phytonyms.dev
+  #     POSTGRES_USER: phytonyms.dev
+  #     POSTGRES_PASSWORD: phytonyms.dev
+  #   logging:
+  #     options:
+  #       max-size: 10m
+  #       max-file: "3"
+  #   volumes:
+  #     - .data/postgresdb:/var/lib/postgresql/data
+  #     - .logs/postgresdb:/var/logs
+  #     - .tmp/postgresdb:/tmp
+  #     - type: bind
+  #       source: .history/postgresdb/.bash_history
+  #       target: /root/.ash_history
+  #     # copy the sql script to create tables
+  #     # - ./sql/create_tables.sql:/docker-entrypoint-initdb.d/create_tables.sql
+
+  service:
+    image: "usalko/test4:v1${DOCKER_TAG_SUFFIX}"
     restart: always
     mem_limit: 256m
     environment:
-      TOKEN: ${TOKEN}
-      SERVICE_HTTP_PORT: $SERVICE_HTTP_PORT
+      # DJANGO_PRODUCTION: 'True'
+      DJANGO_SECRET_KEY: ${DJANGO_SECRET_KEY}
     volumes:
       - .logs/test4:/var/log
       - .tmp/test4:/tmp
@@ -17,12 +39,12 @@ services:
         target: /root/.ash_history
 
   front:
-    image: usalko/test4:front
+    image: "usalko/test4:front${DOCKER_TAG_SUFFIX}"
     restart: always
     mem_limit: 64m
     volumes:
-      - .logs/nginx:/var/log
-      - .tmp/nginx:/tmp
+      - .logs/front:/var/log
+      - .tmp/front:/tmp
       - type: bind
         source: ./nginx.conf
         target: /etc/nginx/nginx.conf
