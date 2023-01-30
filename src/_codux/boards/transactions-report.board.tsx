@@ -1,9 +1,9 @@
 import { createBoard } from '@wixc3/react-board';
-import { Report } from '../../components/report/report';
+import { TransactionReport } from '../../components/reports/TransactionReport';
 
 export default createBoard({
     name: 'Transactions Report',
     Board: () => <div>
-        <Report />
+        <TransactionReport />
     </div>
 });

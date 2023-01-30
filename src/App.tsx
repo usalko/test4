@@ -1,10 +1,10 @@
-import { Report } from './components/report/report'
+import { Navigator } from './components/Navigator'
 import './App.css';
 
 function App() {
   return (
     <div className="App">
-      <Report />
+      <Navigator />
     </div>
   );
 }
