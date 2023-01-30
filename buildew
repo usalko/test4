@@ -145,14 +145,14 @@ fi
 # fi
 
 if [ "$COMMAND" == "manage" ]; then
-    echo Run manage.py script manage.py "$@"
+    echo Run manage script service/manage.py "$@"
     # Sample: ./buildew manage loaddata app_moods/fixtures/geometry_shapes.yaml
     DJANGO_SECRET_KEY=$(.venv/bin/python3 -c 'from django.core.management.utils import get_random_secret_key; print(get_random_secret_key())')
     export DJANGO_SECRET_KEY
     export DJANGO_DEBUG=True
     export PYTHONPATH=${PYTHONPATH}
     
-    .venv/bin/python3 manage.py "$@"
+    .venv/bin/python3 service/manage.py "$@"
 fi
 
 function check_folder {

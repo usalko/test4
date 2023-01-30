@@ -25,8 +25,17 @@ SECRET_KEY = 'django-insecure-%5u+f0o*45cyb5hj*4k5n+#5y_sb(r1z!ya(%qqn2&x*kp8*#!
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = [ 'service' ]
-
+ALLOWED_HOSTS = ['service', 'localhost']
+CORS_ALLOWED_ORIGINS = [
+    "http://service:8000",
+    "http://localhost:8000",
+    "http://127.0.0.1:8000",
+]
+CSRF_TRUSTED_ORIGINS = [
+    "http://service:8000",
+    "http://localhost:8000",
+    "http://127.0.0.1:8000",
+    ]
 
 # Application definition
 
@@ -37,6 +46,7 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+    'reports',
 ]
 
 MIDDLEWARE = [
@@ -121,3 +131,23 @@ STATIC_URL = 'static/'
 # https://docs.djangoproject.com/en/4.1/ref/settings/#default-auto-field
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
+
+if DEBUG:
+    # MIDDLEWARE += (
+    #     'debug_toolbar.middleware.DebugToolbarMiddleware',
+    # )
+    INSTALLED_APPS += (
+        # 'debug_toolbar',
+        'corsheaders',
+    )
+    CORS_ORIGIN_ALLOW_ALL = True
+    SECURE_REFERRER_POLICY = 'no-referrer'
+
+    import socket  # only if you haven't already imported this
+    hostname, _, ips = socket.gethostbyname_ex(socket.gethostname())
+    INTERNAL_IPS = [
+        ip[: ip.rfind(".")] + ".1" for ip in ips] + ['127.0.0.1', '10.0.2.2']
+
+    # DEBUG_TOOLBAR_CONFIG = {
+    #     'INTERCEPT_REDIRECTS': False,
+    # }
