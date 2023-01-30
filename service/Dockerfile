@@ -43,6 +43,7 @@ COPY --from=builder /install /usr/local
 # RUN apk add --update nodejs npm
 
 COPY service/test4 /test4
+COPY service/reports /reports
 COPY service/manage.py /
 
 RUN mkdir -p /test4/static
