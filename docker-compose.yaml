@@ -49,7 +49,7 @@ services:
         source: ./nginx.conf
         target: /etc/nginx/nginx.conf
       - type: bind
-        source: .history/font/.bash_history
+        source: .history/front/.bash_history
         target: /root/.ash_history
     depends_on:
       - test4
