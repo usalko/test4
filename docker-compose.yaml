@@ -32,10 +32,10 @@ services:
       # DJANGO_PRODUCTION: 'True'
       DJANGO_SECRET_KEY: ${DJANGO_SECRET_KEY}
     volumes:
-      - .logs/test4:/var/log
-      - .tmp/test4:/tmp
+      - .logs/service:/var/log
+      - .tmp/service:/tmp
       - type: bind
-        source: .history/test4/.bash_history
+        source: .history/service/.bash_history
         target: /root/.ash_history
 
   front:
@@ -48,6 +48,9 @@ services:
       - type: bind
         source: ./nginx.conf
         target: /etc/nginx/nginx.conf
+      - type: bind
+        source: .history/font/.bash_history
+        target: /root/.ash_history
     depends_on:
       - test4
     environment:
