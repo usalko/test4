@@ -1,0 +1,35 @@
+[
+    {
+        "date": "2023-01-30T12:01:01",
+        "card_number": "2983749874",
+        "ticket_type": "обычный",
+        "payment_fact": true,
+        "route_code": "12345",
+        "garage_number": "4532",
+        "flight_number": "03",
+        "validator_number": "238762394",
+        "validator_type": "обычный"
+    },
+    {
+        "date": "2023-01-30T12:10:18",
+        "card_number": "2384723847",
+        "ticket_type": "обычный",
+        "payment_fact": true,
+        "route_code": "12345",
+        "garage_number": "4532",
+        "flight_number": "03",
+        "validator_number": "238762394",
+        "validator_type": "обычный"
+    },
+    {
+        "date": "2023-01-30T12:11:14",
+        "card_number": "43874837477",
+        "ticket_type": "обычный",
+        "payment_fact": false,
+        "route_code": "12345",
+        "garage_number": "4532",
+        "flight_number": "03",
+        "validator_number": "238762394",
+        "validator_type": "обычный"
+    }
+]
