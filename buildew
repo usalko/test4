@@ -4,15 +4,15 @@ PYTHON_VERSION=3.11
 COMMAND=$1
 while [[ "$#" -gt 0 ]]; do
     case $1 in
-        --python-version)
-            PYTHON_VERSION="$2"
-            shift
-            shift
+    --python-version)
+        PYTHON_VERSION="$2"
+        shift
+        shift
         ;;
-        *)
-            COMMAND=$1
-            shift
-            break
+    *)
+        COMMAND=$1
+        shift
+        break
         ;;
     esac
     shift
@@ -45,7 +45,7 @@ fi
 
 # CHECK VENV NOT EXISTS
 if [ ! -d .venv ]; then
-    
+
     $PYTHON -m venv .venv
     if [ ! -d .pip ]; then
         mkdir .pip
@@ -78,8 +78,7 @@ echo "=========== $COMMAND"
 echo "$COMMAND ==========="
 echo COMMAND
 
-SERVICES=( 'postgresdb' 'service' 'front' )
-
+SERVICES=('postgresdb' 'service' 'front')
 
 if [ "$COMMAND" == "redeps" ]; then
     echo "Reinstall dependencies"
@@ -118,13 +117,13 @@ function build {
     # --mount type=bind,source=${PWD}/media,destination=/${SERVICE}/media \
     # --mount type=bind,source=${PWD}/.data/front/admin/static,destination=/${SERVICE}/static \
     # --name ${SERVICE}-temp ${SERVICE_IMAGE_NAME} python3 manage.py collectstatic --noinput
-    
+
     # docker container stop ${SERVICE}-temp
 
     # # Replace the original image with the result:
     # # (reverting CMD to whatever it was, otherwise it will be set to /some/post-configure/command)
     # # docker commit --change="CMD bash" ${SERVICE}-temp ${SERVICE_IMAGE_NAME}
-    
+
     # # Delete the temporary container:
     # docker rm ${SERVICE}-temp
 
@@ -151,7 +150,7 @@ if [ "$COMMAND" == "manage" ]; then
     export DJANGO_SECRET_KEY
     export DJANGO_DEBUG=True
     export PYTHONPATH=${PYTHONPATH}
-    
+
     .venv/bin/python3 service/manage.py "$@"
 fi
 
@@ -186,22 +185,22 @@ function start {
     # Tune static folder
     # mkdir -p .data/front/admin/static || exit 1
     # chmod a+rwx .data/front/admin/static
-    
+
     # Sync Images, TODO: put on s3 storage
     # cp back/app/static/images/photo_2021-11-10_11-15-00.jpg .data/front/images/cover
-    
+
     # Check the temporary folders
     check_folder .tmp
-    
+
     # Check the logger folders
     check_folder .logs
     # Tune front folders
     mkdir -p .logs/front/nginx || exit 1
     chmod a+rwx .logs/front/nginx
-    
+
     # Check the home folders
     check_history_folder
-    
+
     if [ "$1" == "" ]; then
         docker-compose up
     else
@@ -209,11 +208,11 @@ function start {
     fi
 }
 
-if [ "$COMMAND" == "up" ] || [ "$COMMAND" == "start" ] ; then
+if [ "$COMMAND" == "up" ] || [ "$COMMAND" == "start" ]; then
     echo 'Run docker images'
-    
+
     start "$@"
-    
+
 fi
 
 function stop {
@@ -224,19 +223,41 @@ function stop {
     fi
 }
 
-if [ "$COMMAND" == "stop" ] || [ "$COMMAND" == "down" ] || [ "$COMMAND" == "finish" ] ; then
+if [ "$COMMAND" == "stop" ] || [ "$COMMAND" == "down" ] || [ "$COMMAND" == "finish" ]; then
     echo 'Stop docker images'
-    
+
     stop "$@"
 fi
 
-if [ "$COMMAND" == "restart" ] ; then
+if [ "$COMMAND" == "restart" ]; then
     echo 'Restart services or whole system'
     stop "$@"
     start "$@"
 fi
 
-if [ "$COMMAND" == "log" ] ; then
+if [ "$COMMAND" == "publish" ]; then
+    echo 'Publish docker images to dockerhub'
+
+    build || {
+        echo "Line 243: Error in build... Exit..."
+        exit 1
+    }
+
+    IMAGE=usalko/test4:v1${DOCKER_TAG_SUFFIX}
+    docker push "$IMAGE" || {
+        echo "Line 248: Error in push to dockerhub image $IMAGE ... Exit..."
+        exit 1
+    }
+
+    IMAGE=usalko/test4:front${DOCKER_TAG_SUFFIX}
+    docker push "$IMAGE" || {
+        echo "Line 252: Error in push to dockerhub image $IMAGE... Exit..."
+        exit 1
+    }
+
+fi
+
+if [ "$COMMAND" == "log" ]; then
     if [ "$*" == "" ]; then
         echo 'Show logs tail <= 10000 entries'
         docker-compose logs -f --tail 10000
@@ -245,7 +266,7 @@ if [ "$COMMAND" == "log" ] ; then
         docker-compose logs -f "$@"
     fi
 fi
-if [ "$COMMAND" == "logs" ] ; then
+if [ "$COMMAND" == "logs" ]; then
     if [ "$*" == "" ]; then
         echo 'Show logs with timestamp tail <= 10000 entries'
         docker-compose logs -f --tail 10000 --timestamps
@@ -257,6 +278,6 @@ fi
 
 # =================================================================================================
 
-AVAILABLE_COMMANDS="run build up start stop down finish restart manage redeps clean log logs"
+AVAILABLE_COMMANDS="run build up start stop down finish restart manage redeps clean log logs publish"
 echo ''
 [[ $AVAILABLE_COMMANDS =~ (^| )$COMMAND($| ) ]] && echo 'Ok' || echo 'Unknown command: ' "$COMMAND" && echo 'Available commands are: ' "$AVAILABLE_COMMANDS"
