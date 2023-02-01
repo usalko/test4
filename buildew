@@ -78,7 +78,7 @@ echo "=========== $COMMAND"
 echo "$COMMAND ==========="
 echo COMMAND
 
-SERVICES=('postgresdb' 'service' 'front')
+SERVICES=( 'postgresdb' 'service' 'front' 'certbot' )
 
 if [ "$COMMAND" == "redeps" ]; then
     echo "Reinstall dependencies"
@@ -198,6 +198,10 @@ function start {
     mkdir -p .logs/front/nginx || exit 1
     chmod a+rwx .logs/front/nginx
 
+    touch .data/certbot/regru.ini
+    mkdir .data/certbot/wwww
+    mkdir .data/certbot/conf
+
     # Check the home folders
     check_history_folder
 
@@ -255,6 +259,34 @@ if [ "$COMMAND" == "publish" ]; then
         exit 1
     }
 
+fi
+
+if [ "$COMMAND" == "certbot-test-run" ]; then
+    [ -n "$1" ] || [ "$1" == "*" ] || {
+        echo "Please determine the host name for the domain $PUBLIC_DOMAIN, as an example for my-host.$PUBLIC_DOMAIN: ./buildew certbot-test-run my-host"
+        exit 63
+    }
+    if [ "$1" == "*" ]; then
+        echo "Test run (dry run) certbot for the host: *.$PUBLIC_DOMAIN"
+        docker compose run --rm  certbot certonly --webroot --webroot-path /var/www/certbot/ --dry-run -d "$PUBLIC_DOMAIN"
+    else
+        echo "Test run (dry run) certbot for the host: $1.$PUBLIC_DOMAIN"
+        docker compose run --rm  certbot certonly --webroot --webroot-path /var/www/certbot/ --dry-run -d "$1.$PUBLIC_DOMAIN"
+    fi
+fi
+
+if [ "$COMMAND" == "certbot-run" ]; then
+    [ -n "$1" ] || [ "$1" == "*" ] || {
+        echo "Please determine the host name for the domain $PUBLIC_DOMAIN, as an example for my-host.$PUBLIC_DOMAIN: ./buildew certbot-run my-host"
+        exit 77
+    }
+    if [ "$1" == "*" ]; then
+        echo "Test run (dry run) certbot for the host: *.$PUBLIC_DOMAIN"
+        docker compose run --rm  certbot certonly --webroot --webroot-path /var/www/certbot/ -d "$PUBLIC_DOMAIN"
+    else
+        echo "Run certbot for the host: $1.$PUBLIC_DOMAIN"
+        docker compose run --rm  certbot certonly --webroot --webroot-path /var/www/certbot/ -d "$1.$PUBLIC_DOMAIN"
+    fi
 fi
 
 if [ "$COMMAND" == "log" ]; then
