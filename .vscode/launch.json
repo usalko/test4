@@ -22,6 +22,9 @@
                 "run-script",
                 "start"
             ],
+            "env": {
+                "BACKEND_API_ENDPOINT": "http://localhost:8000"
+            },
             "runtimeExecutable": "npm",
             "skipFiles": [
                 "<node_internals>/**"
