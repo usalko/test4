@@ -1,12 +1,21 @@
-import { Navigator } from './components/Navigator'
+import { Route, Routes } from 'react-router-dom';
 import './App.css';
+import { Navigator } from './components/Navigator';
+import { StartPage } from './components/pages/StartPage';
+import { TransactionReport } from './components/reports/TransactionReport';
+
 
 function App() {
   return (
     <div className="App">
-      <Navigator />
+      <Routes>
+        <Route path="/" element={<Navigator />}>
+          <Route index element={<StartPage />} />
+          <Route path="/transactions" element={<TransactionReport />} />
+        </Route>                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                      
+      </Routes>
     </div>
   );
 }
 
-export default App;
+export default App;                                                                       

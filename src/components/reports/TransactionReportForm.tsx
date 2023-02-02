@@ -14,11 +14,13 @@ export const TransactionReportForm: React.FC<TransactionReportFormProps> = ({ cl
             <InputField label="Укажите Гаражный Номер:" className="ml-5" />
             <InputDateRangeField label="Выберите период: " className="ml-5" />
             <InputField label="Укажите Номер Билета:" className="ml-5" />
-            <button className="btn ml-10">Выбрать</button>
+            <button className="btn btn-primary btn-outline ml-10">Выбрать</button>
         </div>
         <article className="prose flex-row">
             <h2 className="text-left ml-5 w-max">Транзакции по гаражному номеру и дате: Автобусный парк №, Гаражный номер в период</h2>
         </article>
-        <button className="btn btn-outline block ml-4">Выгрузить отчет</button>
+        <div className="flex-row w-max mt-2">
+            <button className="btn btn-primary btn-outline ml-4">Выгрузить отчет</button>
+        </div>
     </div>
 );

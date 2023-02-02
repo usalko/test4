@@ -12,43 +12,43 @@ export const userColumnDefs: ColumnDef<Transaction, any>[] = [
         header: () => <span>Дата транзакции:</span>,
         footer: (info) => info.column.id,
     }),
-    columnHelper.accessor((row) => row.card_number, {
-        id: "card_number",
+    columnHelper.accessor((row) => row.cardNumber, {
+        id: "cardNumber",
         cell: (info) => <span>{info.getValue()}</span>,
         header: () => <span>Номер карты:</span>,
     }),
-    columnHelper.accessor((row) => row.ticket_type, {
-        id: "ticket_type",
+    columnHelper.accessor((row) => row.ticketType, {
+        id: "ticketType",
         cell: (info) => <span>{info.getValue()}</span>,
         header: () => <span>Тип билета:</span>,
     }),
-    columnHelper.accessor((row) => row.payment_fact, {
-        id: "payment_fact",
+    columnHelper.accessor((row) => row.paymentFact, {
+        id: "paymentFact",
         cell: (info) => <span>{info.getValue()}</span>,
         header: () => <span>Факт оплаты:</span>,
     }),
-    columnHelper.accessor((row) => row.route_code, {
-        id: "route_code",
+    columnHelper.accessor((row) => row.routeCode, {
+        id: "routeCode",
         cell: (info) => <span>{info.getValue()}</span>,
         header: () => <span>Код маршрута:</span>,
     }),
-    columnHelper.accessor((row) => row.garage_number, {
-        id: "garage_number",
+    columnHelper.accessor((row) => row.garageNumber, {
+        id: "garageNumber",
         cell: (info) => <span>{info.getValue()}</span>,
         header: () => <span>Гаражный номер:</span>,
     }),
-    columnHelper.accessor((row) => row.flight_number, {
-        id: "flight_number",
+    columnHelper.accessor((row) => row.flightNumber, {
+        id: "flightNumber",
         cell: (info) => <span>{info.getValue()}</span>,
         header: () => <span>Номер рейса:</span>,
     }),
-    columnHelper.accessor((row) => row.validator_number, {
-        id: "validator_number",
+    columnHelper.accessor((row) => row.validatorNumber, {
+        id: "validatorNumber",
         cell: (info) => <span>{info.getValue()}</span>,
         header: () => <span>Номер валидатора:</span>,
     }),
-    columnHelper.accessor((row) => row.validator_type, {
-        id: "validator_type",
+    columnHelper.accessor((row) => row.validatorType, {
+        id: "validatorType",
         cell: (info) => <span>{info.getValue()}</span>,
         header: () => <span>Тип валидатора:</span>,
     }),

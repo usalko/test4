@@ -1,5 +1,5 @@
 import React from 'react';
-import { TransactionReport } from './reports/TransactionReport';
+import { Outlet } from 'react-router-dom';
 
 export interface NavigatorProps {
     className?: string;
@@ -19,16 +19,16 @@ export const Navigator: React.FC<NavigatorProps> = ({ className = '' }) => (
                     <div className="flex-1 px-2 mx-2">Test4</div>
                     <div className="flex-none hidden lg:block">
                         <ul className="menu menu-horizontal">
-                            <li><a>Отчет по транзакциям</a></li>
+                            <li><a href="#/transactions">Отчет по транзакциям</a></li>
                         </ul>
                     </div>
                 </div>
-                <TransactionReport/>
+                <Outlet />
             </div>
             <div className="drawer-side">
                 <label htmlFor="my-drawer-3" className="drawer-overlay"></label>
                 <ul className="menu p-4 w-80 bg-base-100">
-                    <li><a>Отчет по транзакциям</a></li>
+                    <li><a href="#/transactions">Отчет по транзакциям</a></li>
                 </ul>
 
             </div>

@@ -1,16 +1,24 @@
-import React from 'react';
+import { ApolloProvider } from '@apollo/client';
 import ReactDOM from 'react-dom/client';
-import './index.css';
+import { Provider } from 'react-redux';
+import { HashRouter } from 'react-router-dom';
 import App from './App';
+import client from './apollo/client';
+import './index.css';
 import reportWebVitals from './reportWebVitals';
+import store from './store';
 
 const root = ReactDOM.createRoot(
   document.getElementById('root') as HTMLElement
 );
 root.render(
-  <React.StrictMode>
-    <App />
-  </React.StrictMode>
+  <Provider store={store}>
+    <HashRouter basename='/'> {/* The basename replaced in the Docker build stage. */}
+      <ApolloProvider client={client}>
+        <App />
+      </ApolloProvider>
+    </HashRouter>
+  </Provider>
 );
 
 // If you want to start measuring performance in your app, pass a function

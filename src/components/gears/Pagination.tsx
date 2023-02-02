@@ -48,14 +48,14 @@ const Pagination = ({ table }: Props) => {
                 </div>
                 {/* page info */}
                 <span className="flex items-center gap-1">
-                    <div>Page</div>
+                    <div>Страница</div>
                     <strong>
-                        {state.pageIndex + 1} of {table.getPageCount()}
+                        {state.pageIndex + 1} из {table.getPageCount()}
                     </strong>
                 </span>
                 {/* input to skip to a specific page */}
                 <span className="flex items-center gap-1">
-                    | Go to page:
+                    | Перейти на страницу:
                     <input
                         defaultValue={state.pageIndex + 1}
                         type="number"
@@ -76,7 +76,7 @@ const Pagination = ({ table }: Props) => {
                 >
                     {[10, 20, 30, 40, 50].map((pageSize) => (
                         <option key={pageSize} value={pageSize}>
-                            Show {pageSize}
+                            Показывать по {pageSize} строк на странице
                         </option>
                     ))}
                 </select>
