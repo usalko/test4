@@ -2,12 +2,12 @@ import React from 'react'
 import Datepicker from "react-tailwindcss-datepicker"
 
 
-export interface InputDateRangeFieldProps {
+export interface InputDateFieldProps {
     className?: string,
     hint?: string,
     label?: string,
-    initialValue?: {startDate?: Date, finishDate?: Date},
-    onChangeValue?: (value: {startDate?: Date, finishDate?: Date}) => void
+    initialValue?: Date,
+    onChangeValue?: (value: Date | undefined) => void
 }
 
 const _asDate = (value: string | null | Date | undefined) => {
@@ -16,12 +16,12 @@ const _asDate = (value: string | null | Date | undefined) => {
     }
     if (String(value) === value) {
         const dateComponents = value.split('-').map((c) => Number.parseInt(c))
-        return new Date(dateComponents[0], dateComponents[1] - 1, dateComponents[2])
+        return new Date(dateComponents[0], dateComponents[1] - 1, dateComponents[2] + 1)
     }
     return value as Date
 }
 
-export const InputDateRangeField: React.FC<InputDateRangeFieldProps> = ({ className = '', hint = '', label = '', initialValue, onChangeValue }) => {
+export const InputDateField: React.FC<InputDateFieldProps> = ({ className = '', hint = '', label = '', initialValue = null, onChangeValue }) => {
 
     console.log(initialValue)
 
@@ -31,15 +31,15 @@ export const InputDateRangeField: React.FC<InputDateRangeFieldProps> = ({ classN
             <label tabIndex={0} className="mt-3 mr-2">{label}</label>
             <div className="w-120">
                 <Datepicker i18n="ru"
-                    asSingle={false}
-                    useRange={true}
-                    value={{ startDate: initialValue?.startDate!, endDate: initialValue?.finishDate! }} 
+                    asSingle={true}
+                    useRange={false}
+                    value={{ startDate: initialValue, endDate: initialValue }} 
                     onChange={async (value) => {
                     if (onChangeValue) {
-                        onChangeValue({startDate: _asDate(value?.startDate), finishDate: _asDate(value?.endDate)})
+                        onChangeValue(_asDate(value?.startDate))
                     }
                 }} />
-            </div>value.split('-')value.split('-')
+            </div>
         </div>
     </div>
 )}
