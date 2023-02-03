@@ -1,6 +1,9 @@
 import React from 'react';
-import TransactionTable from '../data-driven/TransactionTable';
+import DataTable from '../data-driven/DataTable';
 import { TransactionReportFilter } from './TransactionReportForm'
+import { Transaction } from '../../model/Transaction';
+import data from '../../data/transactions.json'
+import { userColumnDefs as transactionColumnDefs } from '../data-driven/TransactionColumnDefs';
 
 
 export interface TransactionReportBodyProps {
@@ -8,12 +11,14 @@ export interface TransactionReportBodyProps {
     filter?: TransactionReportFilter
 }
 
+const TransactionTable = DataTable<Transaction>()
+
 export const TransactionReportBody: React.FC<TransactionReportBodyProps> = ({ className = '', filter }) => {
 
-    console.log(`Filter is ${JSON.stringify(filter)}`)
+    console.debug(`Filter is ${JSON.stringify(filter)}`)
 
     return (
     <div className={className}>
-        <TransactionTable />
+        <TransactionTable data={(data as any[]) as Transaction[]} columnDefs={transactionColumnDefs}/>
     </div>
 )}
