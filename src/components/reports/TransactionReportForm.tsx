@@ -49,8 +49,8 @@ export const TransactionReportForm: React.FC<TransactionReportFormProps> = ({ cl
                     }
                 }}>Выбрать</button>
             </div>
-            <article className="prose flex-row">
-                <h2 className="text-left ml-5">Транзакции по гаражному номеру и дате: Автобусный парк № {state.parkName},
+            <article className="prose flex-row max-w-[100%]">
+                <h2 className="text-left ml-5 max-w-[100%]">Транзакции по гаражному номеру и дате: Автобусный парк № {state.parkName},
                     Гаражный номер {state.garageNumber} в период c {state.startDate?.toISOString().split("T")[0]} по {state.finishDate?.toISOString().split("T")[0]}
                 </h2>
             </article>
