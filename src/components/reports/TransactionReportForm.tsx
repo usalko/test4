@@ -30,7 +30,10 @@ export const TransactionReportForm: React.FC<TransactionReportFormProps> = ({ cl
     return (
         <div className={className}>
             <div className="form-control flex-row m-5">
-                <ComboBox label="Выберите парк:" items={["1", "2", "3"]} />
+                <ComboBox label="Выберите парк:" 
+                    items={[{title: "Парк 1", key: 1},{title: "Парк 2", key: 2}, {title: "Парк 3", key: 3}]}
+                    initialValue={{key: 1, title: "Парк 2"}}
+                    onChangeValue={(value) => setValue({...state, parkName: value.key.toString()})}/>
                 <InputField label="Укажите Гаражный Номер:" className="ml-5"
                     initialValue={state.garageNumber}
                     onChangeValue={(value) => setValue({ ...state, garageNumber: value })} />

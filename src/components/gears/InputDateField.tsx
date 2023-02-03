@@ -16,14 +16,12 @@ const _asDate = (value: string | null | Date | undefined) => {
     }
     if (String(value) === value) {
         const dateComponents = value.split('-').map((c) => Number.parseInt(c))
-        return new Date(dateComponents[0], dateComponents[1] - 1, dateComponents[2] + 1)
+        return new Date(dateComponents[0], dateComponents[1] - 1, dateComponents[2])
     }
     return value as Date
 }
 
 export const InputDateField: React.FC<InputDateFieldProps> = ({ className = '', hint = '', label = '', initialValue = null, onChangeValue }) => {
-
-    console.log(initialValue)
 
     return (
     <div className={className}>
