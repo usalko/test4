@@ -1,6 +1,6 @@
-from strawberry_django_plus import gql
-from reports import models as reports_models
 from django.contrib.auth import models as auth_models
+from reports import models as reports_models
+from strawberry_django_plus import gql
 
 
 @gql.django.filter(auth_models.User, lookups=True)
@@ -8,6 +8,27 @@ class UserFilters:
 
     first_name: gql.auto
     last_name: gql.auto
+
+
+@gql.django.filter(reports_models.Park, lookups=True)
+class ParkFilters:
+
+    id: gql.auto
+    title: gql.auto
+
+
+@gql.django.filter(reports_models.Garage, lookups=True)
+class GarageFilters:
+
+    id: gql.auto
+    number: gql.auto
+
+
+@gql.django.filter(reports_models.Ticket, lookups=True)
+class TicketFilters:
+
+    id: gql.auto
+    number: gql.auto
 
 
 @gql.django.filter(reports_models.Transaction, lookups=True)

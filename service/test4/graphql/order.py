@@ -10,6 +10,26 @@ class UserOrder:
     last_name: gql.auto
 
 
+@gql.django.order(reports_models.Park)
+class ParkOrder:
+
+    id: gql.auto
+    title: gql.auto
+
+
+@gql.django.order(reports_models.Garage)
+class GarageOrder:
+
+    id: gql.auto
+    number: gql.auto
+
+
+@gql.django.order(reports_models.Ticket)
+class TicketOrder:
+
+    id: gql.auto
+    number: gql.auto
+
 @gql.django.order(reports_models.Transaction)
 class TransactionOrder:
 

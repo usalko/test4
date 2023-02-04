@@ -13,6 +13,27 @@ class User(relay.Node):
     last_name: gql.auto
 
 
+@gql.django.type(reports_models.Park)
+class Park(relay.Node):
+
+    id: gql.auto
+    title: gql.auto
+
+
+@gql.django.type(reports_models.Garage)
+class Garage(relay.Node):
+
+    id: gql.auto
+    number: gql.auto
+
+
+@gql.django.type(reports_models.Ticket)
+class Ticket(relay.Node):
+
+    id: gql.auto
+    number: gql.auto
+
+
 @gql.django.type(reports_models.Transaction)
 class Transaction(relay.Node):
 
