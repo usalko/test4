@@ -283,7 +283,7 @@ if [ "$COMMAND" == "renew" ]; then
     stop "$@"
     remove_front_image
     remove_back_image
-    start "$@"
+    start "$@" &
 fi
 
 if [ "$COMMAND" == "renew-back" ]; then
@@ -291,7 +291,7 @@ if [ "$COMMAND" == "renew-back" ]; then
     docker-compose stop service
     remove_back_image
     docker-compose up --no-start service
-    docker-compose start service
+    docker-compose start service &
 fi
 
 if [ "$COMMAND" == "renew" ]; then
@@ -299,7 +299,7 @@ if [ "$COMMAND" == "renew" ]; then
     docker-compose stop front
     remove_front_image
     docker-compose up --no-start front
-    docker-compose start front
+    docker-compose start front &
 fi
 
 #========================================== LOGS ==================================================
