@@ -45,6 +45,7 @@ COPY --from=builder /install /usr/local
 COPY service/test4 /test4
 COPY service/reports /reports
 COPY service/manage.py /
+COPY service/data /data
 
 RUN mkdir -p /test4/static
 RUN mkdir -p /media
