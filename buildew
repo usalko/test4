@@ -270,12 +270,12 @@ fi
 
 function remove_front_image {
     FRONT_CONTAINER=$(docker image ls | grep front | awk '{ print $3 }')
-    docker image rm $FRONT_CONTAINER
+    docker image rm "$FRONT_CONTAINER" --force
 }
 
 function remove_back_image {
-    FRONT_CONTAINER=$(docker image ls | grep v1 | awk 'NR==1{ print $3 }')
-    docker image rm "$FRONT_CONTAINER"
+    V1_CONTAINER=$(docker image ls | grep v1 | awk 'NR==1{ print $3 }')
+    docker image rm "$V1_CONTAINER" --force
 }
 
 if [ "$COMMAND" == "renew" ]; then
