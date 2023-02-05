@@ -268,6 +268,41 @@ if [ "$COMMAND" == "publish" ]; then
 
 fi
 
+function remove_front_image {
+    FRONT_CONTAINER=$(docker image ls | grep front | awk '{ print $3 }')
+    docker image rm $FRONT_CONTAINER
+}
+
+function remove_back_image {
+    FRONT_CONTAINER=$(docker image ls | grep v1 | awk 'NR==1{ print $3 }')
+    docker image rm "$FRONT_CONTAINER"
+}
+
+if [ "$COMMAND" == "renew" ]; then
+    echo 'Renew all'
+    stop "$@"
+    remove_front_image
+    remove_back_image
+    start "$@"
+fi
+
+if [ "$COMMAND" == "renew-back" ]; then
+    echo 'Renew back'
+    docker-compose stop service
+    remove_back_image
+    docker-compose up --no-start service
+    docker-compose start service
+fi
+
+if [ "$COMMAND" == "renew" ]; then
+    echo 'Renew front'
+    docker-compose stop front
+    remove_front_image
+    docker-compose up --no-start front
+    docker-compose start front
+fi
+
+#========================================== LOGS ==================================================
 if [ "$COMMAND" == "log" ]; then
     if [ "$*" == "" ]; then
         echo 'Show logs tail <= 10000 entries'
@@ -289,6 +324,6 @@ fi
 
 # =================================================================================================
 
-AVAILABLE_COMMANDS="run build up start stop down finish restart manage service redeps clean log logs publish"
+AVAILABLE_COMMANDS="run build up start stop down finish restart manage service redeps renew renew-front renew-back clean log logs publish"
 echo ''
 [[ $AVAILABLE_COMMANDS =~ (^| )$COMMAND($| ) ]] && echo 'Ok' || echo 'Unknown command: ' "$COMMAND" && echo 'Available commands are: ' "$AVAILABLE_COMMANDS"
