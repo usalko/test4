@@ -4,7 +4,7 @@ from django.db import models
 
 
 class Transaction(models.Model):
-    date = models.DateField('дата транзакции')
+    date = models.DateTimeField('дата транзакции')
     card_number = models.CharField('номер карты', max_length=52)
     ticket_type = models.CharField('тип билета', max_length=8)
     payment_fact = models.BooleanField('факт оплаты')

@@ -1,6 +1,7 @@
 import React, { useState } from 'react'
 import { TransactionReportBody } from './TransactionReportBody'
-import { TransactionReportForm, TransactionReportFilter } from './TransactionReportForm'
+import { TransactionReportForm } from './TransactionReportForm'
+import { TransactionReportFilter } from '../../filters/TransactionReportFilter'
 
 export interface TransactionReportState {
     filter?: TransactionReportFilter

@@ -1,12 +1,12 @@
 import { gql } from '@apollo/client';
+import { TransactionReportFilter } from '../filters/TransactionReportFilter'
 
-export const GET_TRANSACTIONS = (filters = '{}') => {
+export const GET_TRANSACTIONS = (filter) => {
+  const filters = ''
   return (gql`query TransactionsWithCursorPagination {
     transactionsRelayConnection(
     first: 10
-    filters: 
     ${filters}
-    , 
   ) {
     pageInfo {
       startCursor

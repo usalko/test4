@@ -2,14 +2,7 @@ import React, { useState } from 'react'
 import { ComboBox } from '../gears/ComboBox'
 import { InputField } from '../gears/InputField'
 import { InputDateField } from '../gears/InputDateField'
-
-export interface TransactionReportFilter {
-    parkName?: string
-    garageNumber?: string
-    startDate?: Date
-    finishDate?: Date
-    ticketNumber?: string
-}
+import { TransactionReportFilter } from '../../filters/TransactionReportFilter'
 
 export interface TransactionReportFormProps {
     className?: string
