@@ -1,10 +1,10 @@
-import { useLazyQuery } from '@apollo/client'
+import { useLazyQuery } from '@apollo/client';
 import React, { useCallback, useEffect, useState } from 'react';
-import { GET_TRANSACTIONS } from '../../apollo/get-transactions'
-import { TransactionReportFilter } from '../../filters/TransactionReportFilter'
-import { Transaction } from '../../model/Transaction'
-import DataTable from '../data-driven/DataTable'
-import { userColumnDefs as transactionColumnDefs } from '../data-driven/TransactionColumnDefs'
+import { GET_TRANSACTIONS, _nodeToTransaction, _useTransactionFilter } from '../../apollo/get-transactions';
+import { TransactionReportFilter } from '../../filters/TransactionReportFilter';
+import { Transaction } from '../../model/Transaction';
+import DataTable from '../data-driven/DataTable';
+import { userColumnDefs as transactionColumnDefs } from '../data-driven/TransactionColumnDefs';
 
 
 export interface TransactionReportBodyState {
@@ -28,13 +28,14 @@ export const TransactionReportBody: React.FC<TransactionReportBodyProps> = ({ cl
     })
 
     console.debug(`Filter is ${JSON.stringify(filter)}`)
-    const [getRequest, { loading, error, data, refetch, networkStatus }] = useLazyQuery(GET_TRANSACTIONS(filter))
+    const [getRequest, { loading, error, data, refetch, networkStatus }] = useLazyQuery(GET_TRANSACTIONS, { variables: { filters: _useTransactionFilter(filter) } })
 
     const fetchData = useCallback(async () => {
-        getRequest().then((result) => {
-            setValue({ filteredData: result.data.transactionsRelayConnection.edges.map((node: any) => node.node as Transaction) })
+        getRequest({ variables: { filters: _useTransactionFilter(filter) } }).then((result) => {
+            setValue({ filteredData: result.data.transactionsRelayConnection.edges.map((node: any) => _nodeToTransaction(node.node)) })
+            // state.filteredData = result.data.transactionsRelayConnection.edges.map((node: any) => _nodeToTransaction(node.node))
         })
-    }, [getRequest])
+    }, [getRequest, filter])
 
     useEffect(() => {
         fetchData().catch(console.error)
