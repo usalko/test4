@@ -154,6 +154,17 @@ if [ "$COMMAND" == "manage" ]; then
     .venv/bin/python3 service/manage.py "$@"
 fi
 
+if [ "$COMMAND" == "service" ]; then
+    echo Run manage script service/manage.py runserver "$@"
+    # Sample: ./buildew manage loaddata app_moods/fixtures/geometry_shapes.yaml
+    DJANGO_SECRET_KEY=$(.venv/bin/python3 -c 'from django.core.management.utils import get_random_secret_key; print(get_random_secret_key())')
+    export DJANGO_SECRET_KEY
+    export DJANGO_DEBUG=True
+    export PYTHONPATH=${PYTHONPATH}
+
+    .venv/bin/python3 service/manage.py runserver "$@"
+fi
+
 function check_folder {
     FOLDER=$1
     mkdir -p "$FOLDER" || exit 1
@@ -278,6 +289,6 @@ fi
 
 # =================================================================================================
 
-AVAILABLE_COMMANDS="run build up start stop down finish restart manage redeps clean log logs publish"
+AVAILABLE_COMMANDS="run build up start stop down finish restart manage service redeps clean log logs publish"
 echo ''
 [[ $AVAILABLE_COMMANDS =~ (^| )$COMMAND($| ) ]] && echo 'Ok' || echo 'Unknown command: ' "$COMMAND" && echo 'Available commands are: ' "$AVAILABLE_COMMANDS"
