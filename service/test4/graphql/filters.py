@@ -1,3 +1,4 @@
+from typing import Optional
 from django.contrib.auth import models as auth_models
 from reports import models as reports_models
 from strawberry_django_plus import gql
@@ -22,13 +23,7 @@ class GarageFilters:
 
     id: gql.auto
     number: gql.auto
-
-
-@gql.django.filter(reports_models.Ticket, lookups=True)
-class TicketFilters:
-
-    id: gql.auto
-    number: gql.auto
+    park: Optional['ParkFilters']
 
 
 @gql.django.filter(reports_models.Transaction, lookups=True)
@@ -41,7 +36,8 @@ class TransactionFilters:
     payment_fact: gql.auto
     ticket_type: gql.auto
     route_code: gql.auto
-    garage_number: gql.auto
+    garage: Optional['GarageFilters']
     flight_number: gql.auto
     validator_number: gql.auto
     validator_type: gql.auto
+    ticket_number: gql.auto

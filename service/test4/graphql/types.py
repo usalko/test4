@@ -1,6 +1,7 @@
 # types.py
-from django.contrib.auth import models as auth_models
+from typing import Optional
 
+from django.contrib.auth import models as auth_models
 from reports import models as reports_models
 from strawberry_django_plus import gql
 from strawberry_django_plus.gql import relay
@@ -25,13 +26,7 @@ class Garage(relay.Node):
 
     id: gql.auto
     number: gql.auto
-
-
-@gql.django.type(reports_models.Ticket)
-class Ticket(relay.Node):
-
-    id: gql.auto
-    number: gql.auto
+    park: Optional['Park']
 
 
 @gql.django.type(reports_models.Transaction)
@@ -44,7 +39,7 @@ class Transaction(relay.Node):
     payment_fact: gql.auto
     ticket_type: gql.auto
     route_code: gql.auto
-    garage_number: gql.auto
+    garage: Optional['Garage']
     flight_number: gql.auto
     validator_number: gql.auto
     validator_type: gql.auto

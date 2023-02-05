@@ -19,13 +19,9 @@ class Query:
         filters=ParkFilters, order=ParkOrder, pagination=True)
     Parks_relay_connection: relay.Connection[Park] = gql.django.connection(
         filters=ParkFilters, order=ParkOrder)
-    garage: List[Garage] = gql.django.field(
+    garages: List[Garage] = gql.django.field(
         filters=GarageFilters, order=GarageOrder, pagination=True)
-    Garages_relay_connection: relay.Connection[Garage] = gql.django.connection(
-        filters=GarageFilters, order=GarageOrder)
-    ticket: List[Ticket] = gql.django.field(
-        filters=TicketFilters, order=TicketOrder, pagination=True)
-    Tickets_relay_connection: relay.Connection[Ticket] = gql.django.connection(
+    garages_relay_connection: relay.Connection[Garage] = gql.django.connection(
         filters=GarageFilters, order=GarageOrder)
     transactions: List[Transaction] = gql.django.field(
         filters=TransactionFilters, order=TransactionOrder, pagination=True)

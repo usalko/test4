@@ -1,3 +1,4 @@
+from typing import Optional
 from strawberry_django_plus import gql
 from reports import models as reports_models
 from django.contrib.auth import models as auth_models
@@ -22,13 +23,8 @@ class GarageOrder:
 
     id: gql.auto
     number: gql.auto
+    park: Optional['ParkOrder']
 
-
-@gql.django.order(reports_models.Ticket)
-class TicketOrder:
-
-    id: gql.auto
-    number: gql.auto
 
 @gql.django.order(reports_models.Transaction)
 class TransactionOrder:
@@ -40,7 +36,8 @@ class TransactionOrder:
     payment_fact: gql.auto
     ticket_type: gql.auto
     route_code: gql.auto
-    garage_number: gql.auto
+    garage: Optional['GarageOrder']
     flight_number: gql.auto
     validator_number: gql.auto
     validator_type: gql.auto
+    ticket_number: gql.auto

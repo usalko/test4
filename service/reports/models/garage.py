@@ -7,12 +7,12 @@ from .park import Park
 class Garage(models.Model):
     number = models.CharField('Номер гаража', max_length=40)
     park_id: int
-    # park = models.ForeignKey[Park](
-    #     Park,
-    #     on_delete=models.CASCADE,
-    #     related_name="parks",
-    #     related_query_name="park",
-    # )
+    park = models.ForeignKey[Park](
+        Park,
+        on_delete=models.CASCADE,
+        related_name='parks',
+        related_query_name='park',
+    )
 
     class Meta:
         verbose_name = 'гараж'
