@@ -45,6 +45,8 @@ services:
     volumes:
       - .logs/front:/var/log
       - .tmp/front:/tmp
+      - ./.data/certbot/www:/var/www/certbot/:ro
+      - ./.data/certbot/conf/:/etc/nginx/ssl/:ro
       - type: bind
         source: ./nginx.conf
         target: /etc/nginx/nginx.conf
@@ -52,9 +54,15 @@ services:
         source: .history/front/.bash_history
         target: /root/.ash_history
     depends_on:
-      - test4
+      - service
     environment:
       EXPOSE_PORT: ${HTTP_PORT}
     ports:
       - "${HTTP_PORT}:80"
 
+  certbot:
+    image: usalko/certbot
+    volumes:
+      - ./.data/certbot/regru.ini:/etc/letsencrypt/regru.ini:ro
+      - ./.data/certbot/www/:/var/www/certbot/:rw
+      - ./.data/certbot/conf/:/etc/letsencrypt/:rw

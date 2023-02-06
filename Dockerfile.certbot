@@ -1,0 +1,7 @@
+FROM certbot/certbot
+
+# Upgrade pip
+RUN python -m pip install --upgrade pip
+
+# Install reg.ru plugin
+RUN pip install certbot-regru
