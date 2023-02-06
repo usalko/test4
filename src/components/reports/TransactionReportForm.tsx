@@ -6,8 +6,13 @@ import { GET_TICKETS, _nodeToTicketNumber } from '../../apollo/get-tickets';
 import { TransactionReportFilter } from '../../filters/TransactionReportFilter';
 import { Garage } from '../../model/Garage';
 import { Park } from '../../model/Park';
-import { ComboBox } from '../gears/ComboBox';
+import ComboBox from '../gears/ComboBox';
 import { InputDateField } from '../gears/InputDateField';
+
+
+const ParkComboBox = ComboBox<Park>()
+const GarageComboBox = ComboBox<Garage>()
+const TicketComboBox = ComboBox<string>()
 
 
 export interface TransactionReportFormProps {
@@ -60,8 +65,7 @@ export const TransactionReportForm: React.FC<TransactionReportFormProps> = ({ cl
 
     const fetchTickets = useCallback(async () => {
         getTickets({ variables: { ticketNumber: state.ticketNumber || '' } }).then((result) => {
-            state.filteredTickets.length = 0
-            state.filteredTickets.push(...(result.data?.transactionsRelayConnection.edges.map((node: any) => _nodeToTicketNumber(node.node)) || []))
+            state.filteredTickets = [...(result.data?.transactionsRelayConnection.edges.map((node: any) => _nodeToTicketNumber(node.node)) || [])]
             console.log(`Set value to tickets, count is ${result.data?.transactionsRelayConnection.totalCount}`)
         })
     }, [getTickets, state.ticketNumber])
@@ -80,27 +84,32 @@ export const TransactionReportForm: React.FC<TransactionReportFormProps> = ({ cl
 
     // console.log(`State of form is ${JSON.stringify(state)}`)
 
+    const _parkTitle = (park: Park | string) => String(park) === park ? park : (park as Park).title
+    const _garageNumber = (garage: Garage | string) => String(garage) === garage ? garage : (garage as Garage).number
+
     return (
         <div className={className}>
             <div className="form-control flex-row m-5">
-                <ComboBox label="Выберите парк:"
-                    items={state.filteredParks?.map((park) => ({ key: park.id, title: park.title }))}
-                    initialTitle={state.parkName}
-                    onChangeValue={(value) => setValue({ ...state, parkName: value.title })} />
-                <ComboBox label="Укажите гаражный номер:" className="ml-5"
-                    items={state.filteredGarages?.map((garage) => ({ key: garage.id, title: garage.number }))}
-                    initialTitle={state.garageNumber}
-                    onChangeValue={(value) => setValue({ ...state, garageNumber: value.title })} />
+                <ParkComboBox label="Выберите парк:"
+                    items={state.filteredParks}
+                    initialSearchString={state.parkName}
+                    itemTitle={_parkTitle}
+                    onChangeValue={(value) => setValue({ ...state, parkName: _parkTitle(value) })} />
+                <GarageComboBox label="Укажите гаражный номер:" className="ml-5"
+                    items={state.filteredGarages}
+                    initialSearchString={state.garageNumber}
+                    itemTitle={_garageNumber}
+                    onChangeValue={(value) => setValue({ ...state, garageNumber: _garageNumber(value) })} />
                 <InputDateField label="Выберите период c: " className="ml-5"
                     initialValue={state.startDate}
                     onChangeValue={(value) => setValue({ ...state, startDate: value })} />
                 <InputDateField label="по: " className="ml-5"
                     initialValue={state.finishDate}
                     onChangeValue={(value) => setValue({ ...state, finishDate: value })} />
-                <ComboBox label="Укажите номер Билета:" className="ml-5"
-                    items={state.filteredTickets?.map((ticketNumber) => ({ key: ticketNumber, title: ticketNumber }))}
-                    initialTitle={state.ticketNumber}
-                    onChangeValue={(value) => setValue({ ...state, ticketNumber: value.title })} />
+                <TicketComboBox label="Укажите номер Билета:" className="ml-5"
+                    items={state.filteredTickets}
+                    initialSearchString={state.ticketNumber}
+                    onChangeValue={(value) => setValue({ ...state, ticketNumber: value })} />
 
                 <button className="btn btn-primary btn-outline ml-10" onClick={async () => {
                     if (onExecute) {
