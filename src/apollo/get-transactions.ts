@@ -48,7 +48,7 @@ export const _useTransactionFilter = (filter: TransactionReportFilter | undefine
 
 
 /**
- * There is the example for input data
+ * There is the example for filters
  *   filters: {
  *     date: {gte: "2023-01-01T17:28:43.229Z"},
  *     And: {
@@ -61,8 +61,6 @@ export const _useTransactionFilter = (filter: TransactionReportFilter | undefine
  *       }
  *     }
  *   }
- * @param {*} filter 
- * @returns graphql string
  */
 
 export const GET_TRANSACTIONS = gql`query TransactionsWithCursorPagination ($filters: TransactionFilters!) {

@@ -43,3 +43,4 @@ class Transaction(relay.Node):
     flight_number: gql.auto
     validator_number: gql.auto
     validator_type: gql.auto
+    ticket_number: gql.auto

@@ -17,7 +17,7 @@ class Query:
 
     parks: List[Park] = gql.django.field(
         filters=ParkFilters, order=ParkOrder, pagination=True)
-    Parks_relay_connection: relay.Connection[Park] = gql.django.connection(
+    parks_relay_connection: relay.Connection[Park] = gql.django.connection(
         filters=ParkFilters, order=ParkOrder)
     garages: List[Garage] = gql.django.field(
         filters=GarageFilters, order=GarageOrder, pagination=True)
