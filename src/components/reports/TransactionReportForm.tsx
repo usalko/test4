@@ -27,16 +27,22 @@ export interface TransactionReportFormState extends TransactionReportFilter {
     filteredParks: Park[],
     filteredGarages: Garage[],
     filteredTickets: string[],
+    filteredParksRequestsCount: number,
+    filteredGaragesRequestsCount: number,
+    filteredTicketsRequestsCount: number,
 }
 
 
 export const TransactionReportForm: React.FC<TransactionReportFormProps> = ({ className = '', filter, onExecute, onUpload }) => {
 
-    const [state, setValue] = useState<TransactionReportFormState>({
+    const [state, setState] = useState<TransactionReportFormState>({
         ...filter,
         filteredParks: [],
         filteredGarages: [],
         filteredTickets: [],
+        filteredParksRequestsCount: 0,
+        filteredGaragesRequestsCount: 0,
+        filteredTicketsRequestsCount: 0,
     })
 
     console.log(`State of transaction report form is ${JSON.stringify(state)}`)
@@ -47,6 +53,7 @@ export const TransactionReportForm: React.FC<TransactionReportFormProps> = ({ cl
         getParks({ variables: { filters: { title: { startsWith: state.parkName || '' } } } }).then((result) => {
             state.filteredParks.length = 0
             state.filteredParks.push(...(result.data?.parksRelayConnection.edges.map((node: any) => _nodeToPark(node.node)) || []))
+            setState({ ...state, filteredParksRequestsCount: state.filteredParksRequestsCount + 1 })
             console.log(`Set value to parks, count is ${result.data?.parksRelayConnection.totalCount}`)
         })
     }, [getParks, state.parkName])
@@ -57,6 +64,7 @@ export const TransactionReportForm: React.FC<TransactionReportFormProps> = ({ cl
         getGarages({ variables: { filters: { number: { startsWith: state.garageNumber || '' } } } }).then((result) => {
             state.filteredGarages.length = 0
             state.filteredGarages.push(...(result.data?.garagesRelayConnection.edges.map((node: any) => _nodeToGarage(node.node)) || []))
+            setState({ ...state, filteredGaragesRequestsCount: state.filteredGaragesRequestsCount + 1 })
             console.log(`Set value to garages, count is ${result.data?.garagesRelayConnection.totalCount}`)
         })
     }, [getGarages, state.garageNumber])
@@ -65,7 +73,9 @@ export const TransactionReportForm: React.FC<TransactionReportFormProps> = ({ cl
 
     const fetchTickets = useCallback(async () => {
         getTickets({ variables: { ticketNumber: state.ticketNumber || '' } }).then((result) => {
-            state.filteredTickets = [...(result.data?.transactionsRelayConnection.edges.map((node: any) => _nodeToTicketNumber(node.node)) || [])]
+            state.filteredTickets.length = 0
+            state.filteredTickets.push(...(result.data?.transactionsRelayConnection.edges.map((node: any) => _nodeToTicketNumber(node.node)) || []))
+            setState({ ...state, filteredTicketsRequestsCount: state.filteredTicketsRequestsCount + 1 })
             console.log(`Set value to tickets, count is ${result.data?.transactionsRelayConnection.totalCount}`)
         })
     }, [getTickets, state.ticketNumber])
@@ -92,24 +102,27 @@ export const TransactionReportForm: React.FC<TransactionReportFormProps> = ({ cl
             <div className="form-control flex-row m-5">
                 <ParkComboBox label="Выберите парк:"
                     items={state.filteredParks}
+                    requestsCount={state.filteredParksRequestsCount}
                     initialSearchString={state.parkName}
                     itemTitle={_parkTitle}
-                    onChangeValue={(value) => setValue({ ...state, parkName: _parkTitle(value) })} />
+                    onChangeValue={(value) => setState({ ...state, parkName: _parkTitle(value) })} />
                 <GarageComboBox label="Укажите гаражный номер:" className="ml-5"
                     items={state.filteredGarages}
                     initialSearchString={state.garageNumber}
+                    requestsCount={state.filteredGaragesRequestsCount}
                     itemTitle={_garageNumber}
-                    onChangeValue={(value) => setValue({ ...state, garageNumber: _garageNumber(value) })} />
+                    onChangeValue={(value) => setState({ ...state, garageNumber: _garageNumber(value) })} />
                 <InputDateField label="Выберите период c: " className="ml-5"
                     initialValue={state.startDate}
-                    onChangeValue={(value) => setValue({ ...state, startDate: value })} />
+                    onChangeValue={(value) => setState({ ...state, startDate: value })} />
                 <InputDateField label="по: " className="ml-5"
                     initialValue={state.finishDate}
-                    onChangeValue={(value) => setValue({ ...state, finishDate: value })} />
+                    onChangeValue={(value) => setState({ ...state, finishDate: value })} />
                 <TicketComboBox label="Укажите номер Билета:" className="ml-5"
                     items={state.filteredTickets}
+                    requestsCount={state.filteredTicketsRequestsCount}
                     initialSearchString={state.ticketNumber}
-                    onChangeValue={(value) => setValue({ ...state, ticketNumber: value })} />
+                    onChangeValue={(value) => setState({ ...state, ticketNumber: value })} />
 
                 <button className="btn btn-primary btn-outline ml-10" onClick={async () => {
                     if (onExecute) {
@@ -120,7 +133,7 @@ export const TransactionReportForm: React.FC<TransactionReportFormProps> = ({ cl
             </div>
             <article className="prose flex-row max-w-[100%]">
                 <h2 className="text-left ml-5 max-w-[100%]">Транзакции по гаражному номеру и дате: Автобусный парк № {state.parkName || '*'},
-                    Гаражный номер {state.garageNumber || '*'} в период c {state.startDate?.toLocaleDateString()} по {state.finishDate?.toLocaleDateString()}
+                    Гаражный номер {state.garageNumber || '*'} в период c {state.startDate?.toLocaleDateString('ru-RU')} по {state.finishDate?.toLocaleDateString('ru-RU')}
                 </h2>
             </article>
             <div className="flex-row w-max mt-2">

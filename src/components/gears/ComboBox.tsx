@@ -10,7 +10,8 @@ export interface ComboBoxProps<T extends ComboBoxItem> {
     hint?: string,
     label?: string,
     items?: T[],
-    initialSearchString?: string
+    initialSearchString?: string,
+    requestsCount: number, // Variable - signal for update dropdown
 
     onChangeValue?: (value: T | string) => void,
     itemTitle?: (value: T) => string,
