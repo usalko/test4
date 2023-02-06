@@ -294,7 +294,7 @@ if [ "$COMMAND" == "renew-back" ]; then
     docker-compose start service &
 fi
 
-if [ "$COMMAND" == "renew" ]; then
+if [ "$COMMAND" == "renew-front" ]; then
     echo 'Renew front'
     docker-compose stop front
     remove_front_image
