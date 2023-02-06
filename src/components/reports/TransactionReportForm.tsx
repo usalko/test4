@@ -41,7 +41,7 @@ export const TransactionReportForm: React.FC<TransactionReportFormProps> = ({ cl
     const fetchParks = useCallback(async () => {
         getParks({ variables: { filters: { title: { startsWith: state.parkName || '' } } } }).then((result) => {
             state.filteredParks.length = 0
-            state.filteredParks.push(...(result.data?.parksRelayConnection.edges.map((node: any) => _nodeToPark(node.node)) || [] ))
+            state.filteredParks.push(...(result.data?.parksRelayConnection.edges.map((node: any) => _nodeToPark(node.node)) || []))
             console.log(`Set value to parks, count is ${result.data?.parksRelayConnection.totalCount}`)
         })
     }, [getParks, state.parkName])
@@ -51,7 +51,7 @@ export const TransactionReportForm: React.FC<TransactionReportFormProps> = ({ cl
     const fetchGarages = useCallback(async () => {
         getGarages({ variables: { filters: { number: { startsWith: state.garageNumber || '' } } } }).then((result) => {
             state.filteredGarages.length = 0
-            state.filteredGarages.push(...(result.data?.garagesRelayConnection.edges.map((node: any) => _nodeToGarage(node.node)) || [] ))
+            state.filteredGarages.push(...(result.data?.garagesRelayConnection.edges.map((node: any) => _nodeToGarage(node.node)) || []))
             console.log(`Set value to garages, count is ${result.data?.garagesRelayConnection.totalCount}`)
         })
     }, [getGarages, state.garageNumber])
@@ -61,7 +61,7 @@ export const TransactionReportForm: React.FC<TransactionReportFormProps> = ({ cl
     const fetchTickets = useCallback(async () => {
         getTickets({ variables: { ticketNumber: state.ticketNumber || '' } }).then((result) => {
             state.filteredTickets.length = 0
-            state.filteredTickets.push(...(result.data?.transactionsRelayConnection.edges.map((node: any) => _nodeToTicketNumber(node.node)) || [] ))
+            state.filteredTickets.push(...(result.data?.transactionsRelayConnection.edges.map((node: any) => _nodeToTicketNumber(node.node)) || []))
             console.log(`Set value to tickets, count is ${result.data?.transactionsRelayConnection.totalCount}`)
         })
     }, [getTickets, state.ticketNumber])
@@ -97,7 +97,7 @@ export const TransactionReportForm: React.FC<TransactionReportFormProps> = ({ cl
                 <InputDateField label="по: " className="ml-5"
                     initialValue={state.finishDate}
                     onChangeValue={(value) => setValue({ ...state, finishDate: value })} />
-                <ComboBox label="Укажите Номер Билета:" className="ml-5"
+                <ComboBox label="Укажите номер Билета:" className="ml-5"
                     items={state.filteredTickets?.map((ticketNumber) => ({ key: ticketNumber, title: ticketNumber }))}
                     initialTitle={state.ticketNumber}
                     onChangeValue={(value) => setValue({ ...state, ticketNumber: value.title })} />
@@ -110,8 +110,8 @@ export const TransactionReportForm: React.FC<TransactionReportFormProps> = ({ cl
                 }}>Выбрать</button>
             </div>
             <article className="prose flex-row max-w-[100%]">
-                <h2 className="text-left ml-5 max-w-[100%]">Транзакции по гаражному номеру и дате: Автобусный парк № {state.parkName},
-                    Гаражный номер {state.garageNumber} в период c {state.startDate?.toISOString().split("T")[0]} по {state.finishDate?.toISOString().split("T")[0]}
+                <h2 className="text-left ml-5 max-w-[100%]">Транзакции по гаражному номеру и дате: Автобусный парк № {state.parkName || '*'},
+                    Гаражный номер {state.garageNumber || '*'} в период c {state.startDate?.toLocaleDateString()} по {state.finishDate?.toLocaleDateString()}
                 </h2>
             </article>
             <div className="flex-row w-max mt-2">

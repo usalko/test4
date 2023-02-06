@@ -29,6 +29,19 @@ module.exports = {
       },
     ],
   },
+  // Tailwind general theme
+  theme: {
+    borderRadius: {
+      'none': '0',
+      'sm': '0',
+      DEFAULT: '0',
+      'md': '0',
+      'lg': '0',
+      'full': '0',
+      'large': '0',
+    }
+  },
+  // Plugins
   plugins: [require("@tailwindcss/typography"), require("daisyui")],
 }
 
