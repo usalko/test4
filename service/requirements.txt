@@ -1,5 +1,6 @@
 django
-django-cors-headers==3.13.0
+django-cors-headers
+xlsxwriter
 # TODO: Change the branch after finish development
 git+https://github.com/usalko/strawberry.git@fix-fields-order
 git+https://github.com/usalko/strawberry-django-plus.git@distinct-feature

@@ -1,5 +1,7 @@
 from typing import Iterable, Iterator, List, Optional, cast
 
+from reports.jobs.transactions_xlsx_report import TransactionsXlsxReport
+from strawberry.types.info import Info
 from strawberry_django_plus import gql
 from strawberry_django_plus.directives import SchemaDirectiveExtension
 from strawberry_django_plus.gql import relay
@@ -27,6 +29,13 @@ class Query:
         filters=TransactionFilters, order=TransactionOrder, pagination=True)
     transactions_relay_connection: relay.Connection[Transaction] = gql.django.connection(
         filters=TransactionFilters, order=TransactionOrder)
+
+    @gql.django.field
+    def transactionsXlsxReport(self, info: Info) -> str:
+        user = info.context.request.user
+        # if not user.is_authenticated:
+        #    return None
+        return TransactionsXlsxReport().execute(user)
 
 
 schema = gql.Schema(

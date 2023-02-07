@@ -18,6 +18,8 @@ from django.urls import path, re_path
 from django.views.decorators.csrf import csrf_exempt
 from strawberry.django.views import GraphQLView
 from .graphql import schema
+from django.contrib.staticfiles.urls import static
+from test4.settings import *
 
 
 urlpatterns = [
@@ -25,3 +27,6 @@ urlpatterns = [
     re_path(r'^graph', csrf_exempt(
         GraphQLView.as_view(schema=schema, graphiql=True))),
 ]
+
+# STATIC FILES SERVICE
+urlpatterns += static(MEDIA_URL, document_root=MEDIA_ROOT)

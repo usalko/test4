@@ -11,6 +11,7 @@ https://docs.djangoproject.com/en/4.1/ref/settings/
 """
 
 from pathlib import Path
+from os.path import join
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
@@ -126,6 +127,21 @@ USE_TZ = True
 # https://docs.djangoproject.com/en/4.1/howto/static-files/
 
 STATIC_URL = 'static/'
+
+MEDIA_FOLDER_NAME = 'media'
+
+MEDIA_URL = f'{MEDIA_FOLDER_NAME}/'
+
+# Media root to store pdfs and images
+MEDIA_ROOT = join(BASE_DIR, MEDIA_FOLDER_NAME)
+
+# Static root to request static files (styles, images, fonts)
+STATIC_ROOT = join(BASE_DIR, 'static')
+
+# Settings for the static_views.serve
+STATICFILES_DIRS = [
+    MEDIA_ROOT,
+]
 
 # Default primary key field type
 # https://docs.djangoproject.com/en/4.1/ref/settings/#default-auto-field
