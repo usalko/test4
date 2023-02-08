@@ -8,7 +8,7 @@ import { Garage } from '../../model/Garage';
 import { Park } from '../../model/Park';
 import ComboBox from '../gears/ComboBox';
 import { DownloadButton } from '../gears/DownloadButton';
-import { InputDateField } from '../gears/InputDateField';
+import { InputDateRangeField } from '../gears/InputDateRangeField';
 
 
 const ParkComboBox = ComboBox<Park>()
@@ -86,31 +86,28 @@ export const TransactionReportForm: React.FC<TransactionReportFormProps> = ({ cl
 
     return (
         <div className={className}>
-            <div className="form-control flex flex-wrap flex-row m-5">
-                <ParkComboBox label="Выберите парк:" className="flex-none" inputClassName="w-24"
+            <div className="form-control flex flex-wrap flex-row mr-5 ml-5 mb-5">
+                <ParkComboBox label="Выберите парк:" className="flex-none mt-5" inputClassName="w-24"
                     items={state.filteredParks}
                     initialSearchString={state.parkName}
                     itemTitle={_parkTitle}
                     onChangeValue={(value) => setState((state) => { return { ...state, parkName: _parkTitle(value) } })} />
-                <GarageComboBox label="Укажите гаражный номер:" className="flex-none" inputClassName="w-20"
+                <GarageComboBox label="Укажите гаражный номер:" className="flex-none mt-5" inputClassName="w-20"
                     items={state.filteredGarages}
                     initialSearchString={state.garageNumber}
                     itemTitle={_garageNumber}
                     onChangeValue={(value) => setState((state) => { return { ...state, garageNumber: _garageNumber(value) } })} />
-                <InputDateField label="Выберите период c: " className="flex-none w-60"
-                    initialValue={state.startDate}
-                    onChangeValue={(value) => setState((state) => { return { ...state, startDate: value } })} />
-                <InputDateField label="по: " className="flex-none w-48 ml-5"
-                    initialValue={state.finishDate}
-                    onChangeValue={(value) => setState((state) => { return { ...state, finishDate: value } })} />
-                <TicketComboBox label="Укажите номер Билета:" className="flex-none" inputClassName="w-40"
+                <InputDateRangeField label="Выберите период: " className="flex-none mt-5" inputClassName="w-56"
+                    initialValue={{ startDate: state.startDate, finishDate: state.finishDate }}
+                    onChangeValue={(value) => setState((state) => { return { ...state, startDate: value.startDate, finishDate: value.finishDate } })} />
+                <TicketComboBox label="Укажите номер Билета:" className="flex-none mt-5" inputClassName="w-40"
                     items={state.filteredTickets}
                     initialSearchString={state.ticketNumber}
                     onChangeValue={(value) => setState((state) => { return { ...state, ticketNumber: value } })} />
 
                 <span className="flex-auto w-1" />
 
-                <button className="btn btn-primary w-24 btn-outline ml-1" onClick={async () => {
+                <button className="btn btn-primary w-24 btn-outline ml-1 mt-5" onClick={async () => {
                     if (onExecute) {
                         const filter: TransactionReportFilter = state as TransactionReportFilter
                         onExecute({ ...filter })
