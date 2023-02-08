@@ -27,7 +27,7 @@ export const DownloadButton: React.FC<DownloadButtonProps> = ({
     title = 'Download',
     url,
     requestHeaders = {
-        'Content-Type': 'application/binary',
+        'Content-Type': 'application/octet-stream',
     },
     downloadAsFileName }) => {
 
