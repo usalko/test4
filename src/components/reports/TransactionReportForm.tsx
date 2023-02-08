@@ -7,6 +7,7 @@ import { TransactionReportFilter } from '../../filters/TransactionReportFilter';
 import { Garage } from '../../model/Garage';
 import { Park } from '../../model/Park';
 import ComboBox from '../gears/ComboBox';
+import { DownloadButton } from '../gears/DownloadButton';
 import { InputDateField } from '../gears/InputDateField';
 
 
@@ -19,7 +20,7 @@ export interface TransactionReportFormProps {
     className?: string
     filter?: TransactionReportFilter
     onExecute?: (filter: TransactionReportFilter) => void
-    onUpload?: (filter: TransactionReportFilter) => void
+    onUpload?: (filter: TransactionReportFilter) => Promise<string>
 }
 
 
@@ -137,11 +138,15 @@ export const TransactionReportForm: React.FC<TransactionReportFormProps> = ({ cl
                 </h2>
             </article>
             <div className="flex-row w-max mt-2">
-                <button className="btn btn-primary btn-outline ml-4" onClick={async () => {
-                    if (onUpload) {
-                        onUpload({ ...(state as TransactionReportFilter) })
-                    }
-                }}>Выгрузить отчет</button>
+                <DownloadButton className="btn btn-primary btn-outline ml-4"
+                    url={() => {
+                        if (onUpload) {
+                            const filter: TransactionReportFilter = state as TransactionReportFilter
+                            return onUpload({ ...filter })
+                        }
+                        return undefined
+                    }}
+                    title="Выгрузить отчет" />
             </div>
         </div>
     )

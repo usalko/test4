@@ -36,3 +36,5 @@ __py_cache__
 *.sqlite3
 
 .history
+
+service/media/*

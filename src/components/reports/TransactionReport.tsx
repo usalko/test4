@@ -1,7 +1,10 @@
+import { useLazyQuery } from '@apollo/client'
 import React, { useState } from 'react'
+import url from 'url'
+import { GET_TRANSACTIONS_XLSX_REPORT } from '../../apollo/get-transactions-xlsx-report'
+import { TransactionReportFilter } from '../../filters/TransactionReportFilter'
 import { TransactionReportBody } from './TransactionReportBody'
 import { TransactionReportForm } from './TransactionReportForm'
-import { TransactionReportFilter } from '../../filters/TransactionReportFilter'
 
 export interface TransactionReportState {
     filter?: TransactionReportFilter
@@ -23,9 +26,15 @@ export const TransactionReport: React.FC<TransactionReportProps> = ({ className 
         }
     })
 
+    const [getTransactionsXlsxReport] = useLazyQuery(GET_TRANSACTIONS_XLSX_REPORT)
+
     return (
         <div className={className}>
-            <TransactionReportForm filter={value.filter} onExecute={(filterValue) => setValue({ filter: filterValue })} />
+            <TransactionReportForm filter={value.filter}
+                onExecute={(filterValue) => setValue({ filter: filterValue })}
+                onUpload={async (filterValue) => {
+                    return (await getTransactionsXlsxReport()).data?.transactionsXlsxReport as string
+                }} />
             <TransactionReportBody {...value} />
         </div>
     )

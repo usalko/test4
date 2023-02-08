@@ -7,5 +7,12 @@ module.exports = function(app) {
       target: process.env.BACKEND_API_ENDPOINT || 'https://test4.qstand.art/',
       changeOrigin: true,
     })
-  );
-};
+  )
+  app.use(
+    '/media',
+    createProxyMiddleware({
+      target: process.env.BACKEND_API_ENDPOINT || 'https://test4.qstand.art/',
+      changeOrigin: true,
+    })
+  )
+}
