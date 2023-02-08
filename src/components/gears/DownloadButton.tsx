@@ -81,8 +81,8 @@ export const DownloadButton: React.FC<DownloadButtonProps> = ({
             'btn-disabled': state.downloadButtonStatus === 1,
         })}`}
             onClick={async () => {
-                const downloadableLink = String(url) === url ? url : await (url as any)()
                 setState((state) => { return { ...state, downloadButtonStatus: 1 } })
+                const downloadableLink = String(url) === url ? url : await (url as any)()
                 await downloadLink(downloadableLink)
             }}>
             {title}
