@@ -1,4 +1,4 @@
-from typing import Iterable, Iterator, List, Optional, cast
+from typing import List, Optional
 
 from reports.jobs.transactions_xlsx_report import TransactionsXlsxReport
 from strawberry.types.info import Info
@@ -31,11 +31,11 @@ class Query:
         filters=TransactionFilters, order=TransactionOrder)
 
     @gql.django.field
-    def transactionsXlsxReport(self, info: Info) -> str:
+    def transactionsXlsxReport(self, info: Info, filters: TransactionFilters = None, order: TransactionOrder = None) -> str:
         user = info.context.request.user
         # if not user.is_authenticated:
         #    return None
-        return TransactionsXlsxReport().execute(user)
+        return TransactionsXlsxReport().execute(user, filters, order)
 
 
 schema = gql.Schema(

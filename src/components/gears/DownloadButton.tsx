@@ -79,6 +79,7 @@ export const DownloadButton: React.FC<DownloadButtonProps> = ({
     return (
         <button tabIndex={0} className={`${className || 'btn'} ${cn({
             'btn-disabled': state.downloadButtonStatus === 1,
+            'btn-error': state.downloadButtonStatus === 2,
         })}`}
             onClick={async () => {
                 setState((state) => { return { ...state, downloadButtonStatus: 1 } })
