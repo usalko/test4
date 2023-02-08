@@ -12,7 +12,6 @@ export interface ComboBoxProps<T extends ComboBoxItem> {
     label?: string,
     items?: T[],
     initialSearchString?: string,
-    requestsCount: number, // Variable ->>signal for update dropdown
 
     onChangeValue?: (value: T | string) => void,
     itemTitle?: (value: T) => string,
@@ -41,13 +40,9 @@ const ComboBox = <T extends ComboBoxItem>() => {
         })
 
         const ref = useRef()
-        useOnClickOutside(ref.current!, () => setState({ ...state, showDropDown: false }))
-        //onclick handler when clicking a menu item
-        const closeDropdown = () => {
-            setState((state) => { return { ...state, showDropDown: false } })
-        }
+        useOnClickOutside(ref.current!, () => setState((state) => { return { ...state, showDropDown: false } }))
 
-        console.log(`The state of combo-box is ${JSON.stringify(state)}`)
+        // console.debug(`The state of combo-box is ${JSON.stringify(state)}`)
 
         return (
             <div className={className}>
@@ -60,11 +55,11 @@ const ComboBox = <T extends ComboBoxItem>() => {
                             className={`input input-bordered ${inputClassName}`}
                             value={state.searchString}
                             onChange={async (event) => {
-                                closeDropdown()
+                                setState((state) => { return { ...state, searchString: event.target.value } })
                                 if (onChangeValue) {
                                     onChangeValue(event.target.value)
                                 }
-                                setState((state) => { return { ...state, searchString: event.target.value } })
+                                // console.debug('=========================> On change event in combo-box')
                             }}
                             onFocus={() => setState((state) => { return { ...state, showDropDown: items !== undefined } })}
                         />

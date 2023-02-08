@@ -28,9 +28,6 @@ export interface TransactionReportFormState extends TransactionReportFilter {
     filteredParks: Park[],
     filteredGarages: Garage[],
     filteredTickets: string[],
-    filteredParksRequestsCount: number,
-    filteredGaragesRequestsCount: number,
-    filteredTicketsRequestsCount: number,
 }
 
 
@@ -41,32 +38,23 @@ export const TransactionReportForm: React.FC<TransactionReportFormProps> = ({ cl
         filteredParks: [],
         filteredGarages: [],
         filteredTickets: [],
-        filteredParksRequestsCount: 0,
-        filteredGaragesRequestsCount: 0,
-        filteredTicketsRequestsCount: 0,
     })
 
-    console.log(`State of transaction report form is ${JSON.stringify(state)}`)
-
-    const [getParks] = useLazyQuery(GET_PARKS, { variables: { filters: { title: { startsWith: state.parkName || '' } } } })
+    const [getParks] = useLazyQuery(GET_PARKS, { variables: { filters: { title: { iStartsWith: state.parkName || '' } } } })
 
     const fetchParks = useCallback(async () => {
-        getParks({ variables: { filters: { title: { startsWith: state.parkName || '' } } } }).then((result) => {
-            state.filteredParks.length = 0
-            state.filteredParks.push(...(result.data?.parksRelayConnection.edges.map((node: any) => _nodeToPark(node.node)) || []))
-            setState({ ...state, filteredParksRequestsCount: state.filteredParksRequestsCount + 1 })
-            console.log(`Set value to parks, count is ${result.data?.parksRelayConnection.totalCount}`)
+        getParks({ variables: { filters: { title: { iStartsWith: state.parkName || '' } } } }).then((result) => {
+            setState((state) => { return { ...state, filteredParks: [...(result.data?.parksRelayConnection.edges.map((node: any) => _nodeToPark(node.node)) || [])] } })
+            // console.debug(`Set value to parks, count is ${result.data?.parksRelayConnection.totalCount}`)
         })
     }, [getParks, state.parkName])
 
-    const [getGarages] = useLazyQuery(GET_GARAGES, { variables: { filters: { number: { startsWith: state.garageNumber || '' } } } })
+    const [getGarages] = useLazyQuery(GET_GARAGES, { variables: { filters: { number: { iStartsWith: state.garageNumber || '' } } } })
 
     const fetchGarages = useCallback(async () => {
-        getGarages({ variables: { filters: { number: { startsWith: state.garageNumber || '' } } } }).then((result) => {
-            state.filteredGarages.length = 0
-            state.filteredGarages.push(...(result.data?.garagesRelayConnection.edges.map((node: any) => _nodeToGarage(node.node)) || []))
-            setState({ ...state, filteredGaragesRequestsCount: state.filteredGaragesRequestsCount + 1 })
-            console.log(`Set value to garages, count is ${result.data?.garagesRelayConnection.totalCount}`)
+        getGarages({ variables: { filters: { number: { iStartsWith: state.garageNumber || '' } } } }).then((result) => {
+            setState((state) => { return { ...state, filteredGarages: [...(result.data?.garagesRelayConnection.edges.map((node: any) => _nodeToGarage(node.node)) || [])] } })
+            // console.debug(`Set value to garages, count is ${result.data?.garagesRelayConnection.totalCount}`)
         })
     }, [getGarages, state.garageNumber])
 
@@ -74,10 +62,8 @@ export const TransactionReportForm: React.FC<TransactionReportFormProps> = ({ cl
 
     const fetchTickets = useCallback(async () => {
         getTickets({ variables: { ticketNumber: state.ticketNumber || '' } }).then((result) => {
-            state.filteredTickets.length = 0
-            state.filteredTickets.push(...(result.data?.transactionsRelayConnection.edges.map((node: any) => _nodeToTicketNumber(node.node)) || []))
-            setState({ ...state, filteredTicketsRequestsCount: state.filteredTicketsRequestsCount + 1 })
-            console.log(`Set value to tickets, count is ${result.data?.transactionsRelayConnection.totalCount}`)
+            setState((state) => { return { ...state, filteredTickets: [...(result.data?.transactionsRelayConnection.edges.map((node: any) => _nodeToTicketNumber(node.node)) || [])] } })
+            // console.debug(`Set value to tickets, count is ${result.data?.transactionsRelayConnection.totalCount}`)
         })
     }, [getTickets, state.ticketNumber])
 
@@ -93,39 +79,36 @@ export const TransactionReportForm: React.FC<TransactionReportFormProps> = ({ cl
         fetchGarages().catch(console.error)
     }, [fetchGarages])
 
-    // console.log(`State of form is ${JSON.stringify(state)}`)
-
     const _parkTitle = (park: Park | string) => String(park) === park ? park : (park as Park).title
     const _garageNumber = (garage: Garage | string) => String(garage) === garage ? garage : (garage as Garage).number
+
+    // console.debug(`State of transaction report form is ${JSON.stringify(state)}`)
 
     return (
         <div className={className}>
             <div className="form-control flex flex-wrap flex-row m-5">
                 <ParkComboBox label="Выберите парк:" className="flex-none" inputClassName="w-24"
                     items={state.filteredParks}
-                    requestsCount={state.filteredParksRequestsCount}
                     initialSearchString={state.parkName}
                     itemTitle={_parkTitle}
-                    onChangeValue={(value) => setState({ ...state, parkName: _parkTitle(value) })} />
+                    onChangeValue={(value) => setState((state) => { return { ...state, parkName: _parkTitle(value) } })} />
                 <GarageComboBox label="Укажите гаражный номер:" className="flex-none" inputClassName="w-20"
                     items={state.filteredGarages}
                     initialSearchString={state.garageNumber}
-                    requestsCount={state.filteredGaragesRequestsCount}
                     itemTitle={_garageNumber}
-                    onChangeValue={(value) => setState({ ...state, garageNumber: _garageNumber(value) })} />
-                <InputDateField label="Выберите период c: " className="flex-none w-60" 
+                    onChangeValue={(value) => setState((state) => { return { ...state, garageNumber: _garageNumber(value) } })} />
+                <InputDateField label="Выберите период c: " className="flex-none w-60"
                     initialValue={state.startDate}
-                    onChangeValue={(value) => setState({ ...state, startDate: value })} />
+                    onChangeValue={(value) => setState((state) => { return { ...state, startDate: value } })} />
                 <InputDateField label="по: " className="flex-none w-48 ml-5"
                     initialValue={state.finishDate}
-                    onChangeValue={(value) => setState({ ...state, finishDate: value })} />
-                <TicketComboBox label="Укажите номер Билета:" className="flex-none"  inputClassName="w-40"
+                    onChangeValue={(value) => setState((state) => { return { ...state, finishDate: value } })} />
+                <TicketComboBox label="Укажите номер Билета:" className="flex-none" inputClassName="w-40"
                     items={state.filteredTickets}
-                    requestsCount={state.filteredTicketsRequestsCount}
                     initialSearchString={state.ticketNumber}
-                    onChangeValue={(value) => setState({ ...state, ticketNumber: value })} />
-                
-                <span className="flex-auto w-1"/>
+                    onChangeValue={(value) => setState((state) => { return { ...state, ticketNumber: value } })} />
+
+                <span className="flex-auto w-1" />
 
                 <button className="btn btn-primary w-24 btn-outline ml-1" onClick={async () => {
                     if (onExecute) {
