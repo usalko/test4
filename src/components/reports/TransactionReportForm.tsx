@@ -100,32 +100,34 @@ export const TransactionReportForm: React.FC<TransactionReportFormProps> = ({ cl
 
     return (
         <div className={className}>
-            <div className="form-control flex-row m-5">
-                <ParkComboBox label="Выберите парк:"
+            <div className="form-control flex flex-wrap flex-row m-5">
+                <ParkComboBox label="Выберите парк:" className="flex-none" inputClassName="w-24"
                     items={state.filteredParks}
                     requestsCount={state.filteredParksRequestsCount}
                     initialSearchString={state.parkName}
                     itemTitle={_parkTitle}
                     onChangeValue={(value) => setState({ ...state, parkName: _parkTitle(value) })} />
-                <GarageComboBox label="Укажите гаражный номер:" className="ml-5"
+                <GarageComboBox label="Укажите гаражный номер:" className="flex-none" inputClassName="w-20"
                     items={state.filteredGarages}
                     initialSearchString={state.garageNumber}
                     requestsCount={state.filteredGaragesRequestsCount}
                     itemTitle={_garageNumber}
                     onChangeValue={(value) => setState({ ...state, garageNumber: _garageNumber(value) })} />
-                <InputDateField label="Выберите период c: " className="ml-5"
+                <InputDateField label="Выберите период c: " className="flex-none w-60" 
                     initialValue={state.startDate}
                     onChangeValue={(value) => setState({ ...state, startDate: value })} />
-                <InputDateField label="по: " className="ml-5"
+                <InputDateField label="по: " className="flex-none w-48 ml-5"
                     initialValue={state.finishDate}
                     onChangeValue={(value) => setState({ ...state, finishDate: value })} />
-                <TicketComboBox label="Укажите номер Билета:" className="ml-5"
+                <TicketComboBox label="Укажите номер Билета:" className="flex-none"  inputClassName="w-40"
                     items={state.filteredTickets}
                     requestsCount={state.filteredTicketsRequestsCount}
                     initialSearchString={state.ticketNumber}
                     onChangeValue={(value) => setState({ ...state, ticketNumber: value })} />
+                
+                <span className="flex-auto w-1"/>
 
-                <button className="btn btn-primary btn-outline ml-10" onClick={async () => {
+                <button className="btn btn-primary w-24 btn-outline ml-1" onClick={async () => {
                     if (onExecute) {
                         const filter: TransactionReportFilter = state as TransactionReportFilter
                         onExecute({ ...filter })
