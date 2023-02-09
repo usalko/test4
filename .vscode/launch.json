@@ -16,6 +16,18 @@
             "justMyCode": false
         },
         {
+            "name": "Service: Tests",
+            "type": "python",
+            "request": "launch",
+            "program": "${workspaceFolder}/service/manage.py",
+            "args": [
+                "test",
+                "${workspaceFolder}/service/unit_tests"
+            ],
+            "django": true,
+            "justMyCode": false
+        },
+        {
             "name": "Front: Development",
             "request": "launch",
             "runtimeArgs": [

@@ -53,6 +53,7 @@ if [ ! -d .venv ]; then
     fi
     .venv/bin/python3 .pip/get-pip.py
     .venv/bin/pip3 install -r service/requirements.txt
+    .venv/bin/pip3 install -r service/requirements-for-tests.txt
 fi
 
 if [ -f '.env' ]; then
@@ -88,6 +89,7 @@ SERVICES=('postgresdb' 'service' 'front' 'certbot')
 if [ "$COMMAND" == "redeps" ]; then
     echo "Reinstall dependencies"
     .venv/bin/pip3 install -r service/requirements.txt
+    .venv/bin/pip3 install -r service/requirements-for-tests.txt
 fi
 
 if [ "$COMMAND" == "clean" ]; then
@@ -161,6 +163,17 @@ if [ "$COMMAND" == "manage" ]; then
     export PYTHONPATH=${PYTHONPATH}
 
     .venv/bin/python3 service/manage.py "$@"
+fi
+
+if [ "$COMMAND" == "tests" ] || [ "$COMMAND" == "test" ]; then
+    echo Run manage script service/manage.py test service/unit_tests "$@"
+    # Sample: ./buildew manage loaddata app_moods/fixtures/geometry_shapes.yaml
+    DJANGO_SECRET_KEY=$(.venv/bin/python3 -c 'from django.core.management.utils import get_random_secret_key; print(get_random_secret_key())')
+    export DJANGO_SECRET_KEY
+    export DJANGO_DEBUG=True
+    export PYTHONPATH=${PYTHONPATH}
+
+    .venv/bin/python3 service/manage.py test service/unit_tests "$@"
 fi
 
 if [ "$COMMAND" == "service" ]; then
@@ -378,6 +391,6 @@ fi
 
 # =================================================================================================
 
-AVAILABLE_COMMANDS="run build up start stop down finish restart manage service front redeps renew renew-front renew-back clean log logs publish certbot-test-run certbot-run certbot-renew"
+AVAILABLE_COMMANDS="run build up start stop down finish restart manage tests service front redeps renew renew-front renew-back clean log logs publish certbot-test-run certbot-run certbot-renew"
 echo ''
 [[ $AVAILABLE_COMMANDS =~ (^| )$COMMAND($| ) ]] && echo 'Ok' || echo 'Unknown command: ' "$COMMAND" && echo 'Available commands are: ' "$AVAILABLE_COMMANDS"
