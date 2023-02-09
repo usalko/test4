@@ -116,7 +116,7 @@ export const TransactionReportForm: React.FC<TransactionReportFormProps> = ({ cl
             </div>
             <article className="prose flex-row max-w-[100%]">
                 <h2 className="text-left ml-5 max-w-[100%]">Транзакции по гаражному номеру и дате: Автобусный парк № {state.parkName || '*'},
-                    Гаражный номер {state.garageNumber || '*'} в период c {state.startDate?.toLocaleDateString('ru-RU')} по {state.finishDate?.toLocaleDateString('ru-RU')}
+                    Гаражный номер {state.garageNumber || '*'} в период c {state.startDate?.toLocaleDateString('ru-RU') || '*'} по {state.finishDate?.toLocaleDateString('ru-RU') || '*'}
                 </h2>
             </article>
             <div className="flex-row w-max mt-2">
