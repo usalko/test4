@@ -44,12 +44,14 @@ export const InputDateRangeField: React.FC<InputDateRangeFieldProps> = ({ classN
                 <Datepicker i18n="ru"
                     asSingle={false}
                     displayFormat="DD.MM.YYYY"
+                    primaryColor={"violet"} // TODO: fork and fix react-tailwindcss-datepicker, at this time this library unsupported daisy-ui themes
+                    containerClassName="z-20 w-fit"
                     classNames={{
                         container: (p) => {
-                            return 'relative w-full'
+                            return ''
                         },
                         input: (p) => {
-                            return `input input-bordered ${inputClassName}`
+                            return `input input-bordered pr-0 mr-0 ${inputClassName}`
                         },
                         toggleButton: (p) => {
                             return 'hidden'

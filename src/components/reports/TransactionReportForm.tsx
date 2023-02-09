@@ -97,7 +97,7 @@ export const TransactionReportForm: React.FC<TransactionReportFormProps> = ({ cl
                     initialSearchString={state.garageNumber}
                     itemTitle={_garageNumber}
                     onChangeValue={(value) => setState((state) => { return { ...state, garageNumber: _garageNumber(value) } })} />
-                <InputDateRangeField label="Выберите период: " className="flex-none mt-5" inputClassName="w-56"
+                <InputDateRangeField label="Выберите период: " className="flex-none mt-5" inputClassName="w-60"
                     initialValue={{ startDate: state.startDate, finishDate: state.finishDate }}
                     onChangeValue={(value) => setState((state) => { return { ...state, startDate: value.startDate, finishDate: value.finishDate } })} />
                 <TicketComboBox label="Укажите номер Билета:" className="flex-none mt-5" inputClassName="w-40"
