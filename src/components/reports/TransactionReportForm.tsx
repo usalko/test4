@@ -20,7 +20,7 @@ export interface TransactionReportFormProps {
     className?: string
     filter?: TransactionReportFilter
     onExecute?: (filter: TransactionReportFilter) => void
-    onUpload?: (filter: TransactionReportFilter) => Promise<string>
+    onDownload?: (filter: TransactionReportFilter) => Promise<string>
 }
 
 
@@ -31,7 +31,7 @@ export interface TransactionReportFormState extends TransactionReportFilter {
 }
 
 
-export const TransactionReportForm: React.FC<TransactionReportFormProps> = ({ className = '', filter, onExecute, onUpload }) => {
+export const TransactionReportForm: React.FC<TransactionReportFormProps> = ({ className = '', filter, onExecute, onDownload: onUpload }) => {
 
     const [state, setState] = useState<TransactionReportFormState>({
         ...filter,

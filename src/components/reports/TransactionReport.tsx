@@ -1,10 +1,11 @@
 import { useLazyQuery } from '@apollo/client'
 import React, { useState } from 'react'
-import url from 'url'
+import { _useTransactionFilter } from '../../apollo/get-transactions'
 import { GET_TRANSACTIONS_XLSX_REPORT } from '../../apollo/get-transactions-xlsx-report'
 import { TransactionReportFilter } from '../../filters/TransactionReportFilter'
 import { TransactionReportBody } from './TransactionReportBody'
 import { TransactionReportForm } from './TransactionReportForm'
+
 
 export interface TransactionReportState {
     filter?: TransactionReportFilter
@@ -16,7 +17,7 @@ export interface TransactionReportProps {
 
 export const TransactionReport: React.FC<TransactionReportProps> = ({ className = '' }) => {
 
-    const [value, setValue] = useState<TransactionReportState>({
+    const [state, setState] = useState<TransactionReportState>({
         filter: {
             parkName: '',
             garageNumber: '',
@@ -26,16 +27,16 @@ export const TransactionReport: React.FC<TransactionReportProps> = ({ className 
         }
     })
 
-    const [getTransactionsXlsxReport] = useLazyQuery(GET_TRANSACTIONS_XLSX_REPORT)
+    const [getTransactionsXlsxReport] = useLazyQuery(GET_TRANSACTIONS_XLSX_REPORT, { variables: { filters: _useTransactionFilter(state.filter) } })
 
     return (
         <div className={className}>
-            <TransactionReportForm filter={value.filter}
-                onExecute={(filterValue) => setValue({ filter: filterValue })}
-                onUpload={async (filterValue) => {
-                    return (await getTransactionsXlsxReport()).data?.transactionsXlsxReport as string
+            <TransactionReportForm filter={state.filter}
+                onExecute={(filterValue) => setState({ filter: filterValue })}
+                onDownload={async (filterValue) => {
+                    return (await getTransactionsXlsxReport({ variables: { filters: _useTransactionFilter(filterValue) } })).data?.transactionsXlsxReport as string
                 }} />
-            <TransactionReportBody {...value} />
+            <TransactionReportBody {...state} />
         </div>
     )
 }

@@ -1,10 +1,10 @@
-import { useLazyQuery } from '@apollo/client';
-import React, { useCallback, useEffect, useState } from 'react';
-import { GET_TRANSACTIONS, _nodeToTransaction, _useTransactionFilter } from '../../apollo/get-transactions';
-import { TransactionReportFilter } from '../../filters/TransactionReportFilter';
-import { Transaction } from '../../model/Transaction';
-import DataTable from '../data-driven/DataTable';
-import { userColumnDefs as transactionColumnDefs } from '../data-driven/TransactionColumnDefs';
+import { useLazyQuery } from '@apollo/client'
+import React, { useCallback, useEffect, useState } from 'react'
+import { GET_TRANSACTIONS, _nodeToTransaction, _useTransactionFilter } from '../../apollo/get-transactions'
+import { TransactionReportFilter } from '../../filters/TransactionReportFilter'
+import { Transaction } from '../../model/Transaction'
+import DataTable from '../data-driven/DataTable'
+import { userColumnDefs as transactionColumnDefs } from '../data-driven/TransactionColumnDefs'
 
 
 export interface TransactionReportBodyState {
