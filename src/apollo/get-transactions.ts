@@ -10,8 +10,9 @@ import { Transaction } from '../model/Transaction';
  */
 
 export const _useTransactionFilter = (filter: TransactionReportFilter | undefined) => {
+  const emptyFilter = { date: { gte: "2022-01-01" } } // Empty conditions
   if (!filter) {
-    return { date: { gte: "2022-01-01" } } // Empty conditions
+    return emptyFilter
   }
   const conditions: string[] = []
   if (filter.startDate) {
@@ -28,6 +29,10 @@ export const _useTransactionFilter = (filter: TransactionReportFilter | undefine
   }
   if (filter.ticketNumber) {
     conditions.push(`"ticketNumber": {"startsWith": "${filter.ticketNumber}"}`)
+  }
+
+  if (conditions.length === 0) {
+    return emptyFilter
   }
 
   const filtersAsString = `{
