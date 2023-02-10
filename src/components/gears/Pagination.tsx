@@ -94,7 +94,7 @@ const Pagination = ({ table }: Props) => {
                         'dropdown-content menu p-2 shadow bg-base-100 rounded-none w-100': true,
                         hidden: !state.showDropDown,
                     })}>
-                        {[10, 20, 30, 40, 50].map((pageSize) => (
+                        {[10, 50, 100].map((pageSize) => (
                             <li key={pageSize}><span onClick={async (event) => {
                                 const newState = { ...state, pageSize: pageSize, showDropDown: false }
                                 setState((state) => { return { ...newState } })
