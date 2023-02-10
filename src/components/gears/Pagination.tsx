@@ -88,14 +88,14 @@ const Pagination = ({ table }: Props) => {
                 <div className="dropdown dropdown-top">
                     <label tabIndex={0} className="btn btn-outline btn-primary border btn-sm m-1"
                         onClick={() => setState((state) => { return { ...state, showDropDown: true } })}
-                    >Показывать по {state.pageSize} строк на странице</label>
+                    >Показывать по {state.pageSize} строк</label>
                     {/* Drop-down menu ======================================= */}
                     <ul tabIndex={0} className={cn({
-                        'dropdown-content menu p-2 shadow bg-base-100 rounded-none w-100': true,
+                        'dropdown-content menu p-2 shadow bg-base-100 rounded-none w-96': true,
                         hidden: !state.showDropDown,
                     })}>
                         {[10, 50, 100].map((pageSize) => (
-                            <li key={pageSize}><span onClick={async (event) => {
+                            <li key={pageSize}><span className="text-left" onClick={async (event) => {
                                 const newState = { ...state, pageSize: pageSize, showDropDown: false }
                                 setState((state) => { return { ...newState } })
                                 table.setState((tableState) => { return { ...tableState, pagination: { ...newState } } })
