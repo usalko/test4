@@ -10,7 +10,7 @@ class Transaction(models.Model):
     card_number = models.CharField('номер карты', max_length=52)
     ticket_type = models.CharField('тип билета', max_length=8)
     payment_fact = models.BooleanField('факт оплаты')
-    route_code = models.CharField('тип билета', max_length=8)
+    route_code = models.CharField('код маршрута', max_length=8)
     garage_id: int
     garage = models.ForeignKey[Garage](
         Garage,
