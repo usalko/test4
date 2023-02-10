@@ -70,7 +70,7 @@ export const _useTransactionFilter = (filter: TransactionReportFilter | undefine
 
 export const GET_TRANSACTIONS = gql`query TransactionsWithCursorPagination ($filters: TransactionFilters!) {
     transactionsRelayConnection(
-    first: 10
+    first: 100
     filters: $filters
   ) {
     pageInfo {

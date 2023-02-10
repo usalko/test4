@@ -93,7 +93,7 @@ class TransactionsXlsxReport(ReportJob):
             worksheet.write(f'A{row_number}', transaction.date, date_format)
             worksheet.write(f'B{row_number}', transaction.card_number)
             worksheet.write(f'C{row_number}', transaction.ticket_type)
-            worksheet.write(f'D{row_number}', transaction.payment_fact)
+            worksheet.write(f'D{row_number}', int(transaction.payment_fact))
             worksheet.write(f'E{row_number}', transaction.route_code)
             worksheet.write(
                 f'F{row_number}', transaction.garage and transaction.garage.number)
