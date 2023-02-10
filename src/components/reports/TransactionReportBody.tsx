@@ -28,10 +28,10 @@ export const TransactionReportBody: React.FC<TransactionReportBodyProps> = ({ cl
     })
 
     console.debug(`Filter is ${JSON.stringify(filter)}`)
-    const [getRequest, { loading, error, data, refetch, networkStatus }] = useLazyQuery(GET_TRANSACTIONS, { variables: { filters: _useTransactionFilter(filter) } })
+    const [getRequest, { loading, error, data, refetch, networkStatus }] = useLazyQuery(GET_TRANSACTIONS, { variables: { filters: _useTransactionFilter(filter), pageSize: 100 } })
 
     const fetchData = useCallback(async () => {
-        getRequest({ variables: { filters: _useTransactionFilter(filter) } }).then((result) => {
+        getRequest({ variables: { filters: _useTransactionFilter(filter), pageSize: 100 } }).then((result) => {
             setValue({ filteredData: result.data.transactionsRelayConnection.edges.map((node: any) => _nodeToTransaction(node.node)) })
             // state.filteredData = result.data.transactionsRelayConnection.edges.map((node: any) => _nodeToTransaction(node.node))
         })

@@ -68,9 +68,9 @@ export const _useTransactionFilter = (filter: TransactionReportFilter | undefine
  *   }
  */
 
-export const GET_TRANSACTIONS = gql`query TransactionsWithCursorPagination ($filters: TransactionFilters!) {
+export const GET_TRANSACTIONS = gql`query TransactionsWithCursorPagination ($filters: TransactionFilters!, $pageSize: Int!) {
     transactionsRelayConnection(
-    first: 100
+    first: $pageSize
     filters: $filters
   ) {
     pageInfo {

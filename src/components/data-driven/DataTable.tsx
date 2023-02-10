@@ -8,10 +8,10 @@ import {
     getPaginationRowModel,
     getSortedRowModel,
     useReactTable,
-} from "@tanstack/react-table";
-import React from "react";
-// import data from "../../data/transactions.json";
-import Pagination from "../gears/Pagination";
+} from "@tanstack/react-table"
+import React, { useState } from "react"
+// import data from "../../data/transactions.json"
+import Pagination from "../gears/Pagination"
 
 
 export interface DataTableProps<T extends RowData> {
@@ -23,7 +23,7 @@ export interface DataTableProps<T extends RowData> {
 // Components factory
 const DataTable = <T extends RowData> () => {
     const Instance: React.FC<DataTableProps<T>> = ({data, columnDefs}) => {
-        const [sorting, setSorting] = React.useState<SortingState>([]);
+        const [sorting, setSorting] = useState<SortingState>([])
         const table = useReactTable({
             columns: columnDefs,
             data: data,
@@ -35,21 +35,21 @@ const DataTable = <T extends RowData> () => {
                 sorting,
             },
             onSortingChange: setSorting,
-        });
-        const headers = table.getFlatHeaders();
-        const rows = table.getRowModel().rows;
+        })
+        const headers = table.getFlatHeaders()
+        const rows = table.getRowModel().rows
         return (
             <div className="overflow-auto">
                 <table className="table table-zebra my-4 w-full">
                     <thead>
                         <tr>
                             {headers.map((header) => {
-                                const direction = header.column.getIsSorted();
+                                const direction = header.column.getIsSorted()
                                 const arrow: any = {
                                     asc: "🔼",
                                     desc: "🔽",
-                                };
-                                const sort_indicator = direction && arrow[direction];
+                                }
+                                const sort_indicator = direction && arrow[direction]
                                 return (
                                     <th key={header.id}>
                                         {header.isPlaceholder ? null : (
@@ -65,7 +65,7 @@ const DataTable = <T extends RowData> () => {
                                             </div>
                                         )}
                                     </th>
-                                );
+                                )
                             })}
                         </tr>
                     </thead>
@@ -81,7 +81,7 @@ const DataTable = <T extends RowData> () => {
                                         <td key={cell.id}>
                                             {flexRender(cell.column.columnDef.cell, cell.getContext())}
                                         </td>
-                                    );
+                                    )
                                 })}
                             </tr>
                         ))}
