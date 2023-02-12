@@ -14,7 +14,7 @@ export interface InternalPaginationState extends PaginationState {
     showDropDown: boolean
 }
 
-const Pagination = ({ table }: Props) => {
+const DataTablePagination = ({ table }: Props) => {
     // pagination state
     const [state, setState] = useState<InternalPaginationState>({
         ...table.getState().pagination,
@@ -107,4 +107,4 @@ const Pagination = ({ table }: Props) => {
         </div>
     )
 }
-export default Pagination
+export default DataTablePagination
