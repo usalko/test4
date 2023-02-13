@@ -48,8 +48,8 @@ const DataTable = <T extends RowData>() => {
         columnDefs }) => {
 
         const [sorting, setSorting] = useState<SortingState>([])
-        const [pagination] = useState<PaginationState>({
-            pageIndex: 1,
+        const [pagination, setPagination] = useState<PaginationState>({
+            pageIndex: 0,
             pageSize: 10,
         })
         const [{ pageData, pageCount }, setPageData] = useState<PageDataState<T>>({
@@ -142,7 +142,7 @@ const DataTable = <T extends RowData>() => {
                         ))}
                     </tbody>
                 </table>
-                <DataTablePagination table={table} />
+                <DataTablePagination table={table} onChange={(state: PaginationState) => setPagination(state)}/>
             </div>
         )
     }

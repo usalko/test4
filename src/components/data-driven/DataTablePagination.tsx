@@ -6,26 +6,37 @@ import { useOnClickOutside } from 'usehooks-ts'
 
 
 type Props = {
-    // table returned from useTable hook.
     table: Table<any>
+    onChange?: (state: PaginationState) => void
 }
 
 export interface InternalPaginationState extends PaginationState {
     showDropDown: boolean
 }
 
-const DataTablePagination = ({ table }: Props) => {
+const DataTablePagination = ({ table, onChange }: Props) => {
+
     // pagination state
     const [state, setState] = useState<InternalPaginationState>({
         ...table.getState().pagination,
         showDropDown: false
     })
 
-    //last page helper function
-    const goLastPage = () => table.setPageIndex(table.getPageCount() - 1)
-
     const ref = useRef()
     useOnClickOutside(ref.current!, () => setState((state) => { return { ...state, showDropDown: false } }))
+
+    // Linked events
+    const updateState = (partial: (state: PaginationState) => any) => {
+        const partialState = partial(state)
+        if (partialState) {
+            setState((state) => {
+                const newState = { ...state, ...partialState }
+                // Link with parent table events
+                onChange && onChange(newState)
+                return newState
+            })
+        }
+    }
 
     return (
         <div className="my-2">
@@ -34,7 +45,7 @@ const DataTablePagination = ({ table }: Props) => {
                     {/* button to go to first page */}
                     <button
                         className="btn btn-primary btn-sm"
-                        onClick={() => table.setPageIndex(0)}
+                        onClick={async () => updateState(() => { return { pageIndex: 0 } })}
                         disabled={!table.getCanPreviousPage()}
                     >
                         {"<<"}
@@ -42,7 +53,7 @@ const DataTablePagination = ({ table }: Props) => {
                     {/* button to go previous page */}
                     <button
                         className="btn btn-primary  btn-sm"
-                        onClick={() => table.previousPage()}
+                        onClick={async () => updateState((state) => { return state.pageIndex > 0 ? { pageIndex: state.pageIndex - 1 } : undefined })}
                         disabled={!table.getCanPreviousPage()}
                     >
                         {"<"}
@@ -50,7 +61,7 @@ const DataTablePagination = ({ table }: Props) => {
                     {/* button to go next page */}
                     <button
                         className="btn btn-primary btn-sm"
-                        onClick={() => table.nextPage()}
+                        onClick={async () => updateState((state) => { return { pageIndex: state.pageIndex + 1 } })}
                         disabled={!table.getCanNextPage()}
                     >
                         {">"}
@@ -58,7 +69,7 @@ const DataTablePagination = ({ table }: Props) => {
                     {/* button to go last page */}
                     <button
                         className="btn btn-primary btn-sm"
-                        onClick={goLastPage}
+                        onClick={async () => updateState(() => { return { pageIndex: table.getPageCount() - 1 } })}
                         disabled={!table.getCanNextPage()}
                     >
                         {">>"}
@@ -79,7 +90,7 @@ const DataTablePagination = ({ table }: Props) => {
                         type="number"
                         onChange={(e) => {
                             const page = e.target.value ? Number(e.target.value) - 1 : 0
-                            table.setPageIndex(page)
+                            updateState(() => { return { pageIndex: page } })
                         }}
                         className="input input-bordered w-20 input-sm mx-2"
                     />
@@ -96,9 +107,7 @@ const DataTablePagination = ({ table }: Props) => {
                     })}>
                         {[10, 50, 100].map((pageSize) => (
                             <li key={pageSize}><span className="text-left" onClick={async (event) => {
-                                const newState = { ...state, pageSize: pageSize, showDropDown: false }
-                                setState((state) => { return { ...newState } })
-                                table.setState((tableState) => { return { ...tableState, pagination: { ...newState } } })
+                                updateState(() => { return { pageIndex: 0, pageSize: pageSize, showDropDown: false } })
                             }}> Показывать по {pageSize} строк на странице</span></li>
                         ))}
                     </ul>
