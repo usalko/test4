@@ -10,30 +10,27 @@ type Props = {
     onChange?: (state: PaginationState) => void
 }
 
-export interface InternalPaginationState extends PaginationState {
+export interface InternalState {
     showDropDown: boolean
 }
 
 const DataTablePagination = ({ table, onChange }: Props) => {
 
     // pagination state
-    const [state, setState] = useState<InternalPaginationState>({
-        ...table.getState().pagination,
+    const [state, setState] = useState<InternalState>({
         showDropDown: false
     })
 
     const ref = useRef()
     useOnClickOutside(ref.current!, () => setState((state) => { return { ...state, showDropDown: false } }))
 
-    // Linked events
     const updateState = (partial: (state: PaginationState) => any) => {
-        const partialState = partial(state)
+        const partialState = partial({ ...table.getState().pagination })
         if (partialState) {
             setState((state) => {
-                const newState = { ...state, ...partialState }
                 // Link with parent table events
-                onChange && onChange(newState)
-                return newState
+                onChange && onChange({ ...table.getState().pagination, ...partialState })
+                return { ...state, ...partialState }
             })
         }
     }
@@ -79,14 +76,14 @@ const DataTablePagination = ({ table, onChange }: Props) => {
                 <span className="flex items-center gap-1">
                     <div>Страница</div>
                     <strong>
-                        {state.pageIndex + 1} из {table.getPageCount()}
+                        {table.getState().pagination.pageIndex + 1} из {table.getPageCount()}
                     </strong>
                 </span>
                 {/* input to skip to a specific page */}
                 <span className="flex items-center gap-1">
                     | Перейти на страницу:
                     <input
-                        defaultValue={state.pageIndex + 1}
+                        defaultValue={table.getState().pagination.pageIndex + 1}
                         type="number"
                         onChange={(e) => {
                             const page = e.target.value ? Number(e.target.value) - 1 : 0
@@ -99,7 +96,7 @@ const DataTablePagination = ({ table, onChange }: Props) => {
                 <div className="dropdown dropdown-top">
                     <label tabIndex={0} className="btn btn-outline btn-primary border btn-sm m-1"
                         onClick={() => setState((state) => { return { ...state, showDropDown: true } })}
-                    >Показывать по {state.pageSize} строк</label>
+                    >Показывать по {table.getState().pagination.pageSize} строк</label>
                     {/* Drop-down menu ======================================= */}
                     <ul tabIndex={0} className={cn({
                         'dropdown-content menu p-2 shadow bg-base-100 rounded-none w-96': true,

@@ -57,7 +57,7 @@ const DataTable = <T extends RowData>() => {
             pageCount: 0
         })
 
-        // The full ability is const [getRequest, { loading, error, data, refetch, networkStatus }]
+        // The full signature is: const [getRequest, { loading, error, data, refetch, networkStatus }]
         const [getRequest] = useLazyQuery(graphQuery, {
             variables: {
                 filters,
@@ -66,7 +66,7 @@ const DataTable = <T extends RowData>() => {
             }
         })
 
-        const fetchData = useCallback(async (pageIndex: number, pageSize: number) => {
+        const fetchData = useCallback(async (pageIndex: number, pageSize: number, filters: any) => {
             getRequest({ variables: { filters, pageSize: pageSize, cursor: _cursorForPageNumber(pageIndex) } }).then((result) => {
                 setPageData((state) => {
                     return {
@@ -75,13 +75,17 @@ const DataTable = <T extends RowData>() => {
                         pageCount: Math.ceil(queryResultTotalCount(result) / pageSize)
                     }
                 })
-                // state.filteredData = result.data.transactionsRelayConnection.edges.map((node: any) => _nodeToTransaction(node.node))
             })
-        }, [getRequest, queryResultDataMapper, queryResultTotalCount, filters])
+        }, [getRequest, queryResultDataMapper, queryResultTotalCount])
 
+        // Change pagination
         useEffect(() => {
-            fetchData(pagination.pageIndex, pagination.pageSize).catch(console.error)
+            fetchData(pagination.pageIndex, pagination.pageSize, filters).catch(console.error)
         }, [fetchData, pagination])
+        // Change filters
+        useEffect(() => {
+            setPagination((state) => { return { ...state, pageIndex: 0 } })
+        }, [filters])
 
         const table = useReactTable({
             columns: columnDefs,
@@ -142,7 +146,7 @@ const DataTable = <T extends RowData>() => {
                         ))}
                     </tbody>
                 </table>
-                <DataTablePagination table={table} onChange={(state: PaginationState) => setPagination(state)}/>
+                <DataTablePagination table={table} onChange={(state: PaginationState) => setPagination(state)} />
             </div>
         )
     }
