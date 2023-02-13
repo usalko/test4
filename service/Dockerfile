@@ -52,14 +52,14 @@ RUN mkdir -p /media
 RUN mkdir -p /static
 
 # HOT-DEVELOPMENT DEPENDENCY SECTION
-RUN /usr/local/bin/python -m pip install --upgrade pip
-RUN apk add --no-cache --virtual .build-deps make g++
-RUN apk add --update python3-dev
-RUN /usr/local/bin/pip3 install poetry
-# ADD "https://www.random.org/cgi-bin/randbyte?nbytes=10&format=h" skipcache
-# RUN /usr/local/bin/pip3 uninstall -qq -y strawberry-django-plus
-RUN /usr/local/bin/pip3 install "git+https://github.com/usalko/strawberry.git@fix-fields-order"
-RUN /usr/local/bin/pip3 install "git+https://github.com/usalko/strawberry-django-plus.git@distinct-feature"
+# RUN /usr/local/bin/python -m pip install --upgrade pip
+# RUN apk add --no-cache --virtual .build-deps make g++
+# RUN apk add --update python3-dev
+# RUN /usr/local/bin/pip3 install poetry
+# # ADD "https://www.random.org/cgi-bin/randbyte?nbytes=10&format=h" skipcache
+# # RUN /usr/local/bin/pip3 uninstall -qq -y strawberry-django-plus
+# RUN /usr/local/bin/pip3 install "git+https://github.com/usalko/strawberry.git@fix-fields-order"
+# RUN /usr/local/bin/pip3 install "git+https://github.com/usalko/strawberry-django-plus.git@march23"
 # SECTION END
 
 WORKDIR /
