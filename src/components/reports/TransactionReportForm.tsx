@@ -87,20 +87,20 @@ export const TransactionReportForm: React.FC<TransactionReportFormProps> = ({ cl
     return (
         <div className={className}>
             <div className="form-control flex flex-wrap flex-row mr-5 ml-5 mb-5">
-                <ParkComboBox label="Выберите парк:" className="flex-none mt-5" inputClassName="w-24"
+                <ParkComboBox label="Выберите парк:" className="flex-wrap mt-5" inputClassName="w-24"
                     items={state.filteredParks}
                     initialSearchString={state.parkName}
                     itemTitle={_parkTitle}
                     onChangeValue={(value) => setState((state) => { return { ...state, parkName: _parkTitle(value) } })} />
-                <GarageComboBox label="Укажите гаражный номер:" className="flex-none mt-5" inputClassName="w-20"
+                <GarageComboBox label="Укажите гаражный номер:" className="flex-wrap mt-5" inputClassName="w-20"
                     items={state.filteredGarages}
                     initialSearchString={state.garageNumber}
                     itemTitle={_garageNumber}
                     onChangeValue={(value) => setState((state) => { return { ...state, garageNumber: _garageNumber(value) } })} />
-                <InputDateRangeField label="Выберите период: " className="flex-none mt-5" inputClassName="w-60"
+                <InputDateRangeField label="Выберите период: " className="flex-wrap mt-5" inputClassName="w-60"
                     initialValue={{ startDate: state.startDate, finishDate: state.finishDate }}
                     onChangeValue={(value) => setState((state) => { return { ...state, startDate: value.startDate, finishDate: value.finishDate } })} />
-                <TicketComboBox label="Укажите номер Билета:" className="flex-none mt-5" inputClassName="w-40"
+                <TicketComboBox label="Укажите номер Билета:" className="flex-wrap mt-5" inputClassName="w-40"
                     items={state.filteredTickets}
                     initialSearchString={state.ticketNumber}
                     onChangeValue={(value) => setState((state) => { return { ...state, ticketNumber: value } })} />
