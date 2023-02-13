@@ -11,14 +11,16 @@ type Props = {
 }
 
 export interface InternalState {
-    showDropDown: boolean
+    showDropDown: boolean,
+    errorInPageNumber: boolean,
 }
 
 const DataTablePagination = ({ table, onChange }: Props) => {
 
     // pagination state
     const [state, setState] = useState<InternalState>({
-        showDropDown: false
+        showDropDown: false,
+        errorInPageNumber: false,
     })
 
     const ref = useRef()
@@ -28,12 +30,19 @@ const DataTablePagination = ({ table, onChange }: Props) => {
         const partialState = partial({ ...table.getState().pagination })
         if (partialState) {
             setState((state) => {
-                // Link with parent table events
-                onChange && onChange({ ...table.getState().pagination, ...partialState })
+                // Detect table pagination event
+                const paginationProperties = new Set(Object.keys(table.getState().pagination))
+                if (Object.keys(partialState).filter(i => paginationProperties.has(i)).length > 0) {
+                    // Link with parent table events
+                    onChange && onChange({ ...table.getState().pagination, ...partialState })
+                }
                 return { ...state, ...partialState }
             })
         }
     }
+
+    // Page number validation
+    const invalidPageIndex = (pageNumber: number) => (!pageNumber && pageNumber !== 0) || pageNumber < 0 || pageNumber > (table.getPageCount() - 1)
 
     return (
         <div className="my-2">
@@ -83,13 +92,20 @@ const DataTablePagination = ({ table, onChange }: Props) => {
                 <span className="flex items-center gap-1">
                     | Перейти на страницу:
                     <input
+                        className={cn({
+                            'input input-bordered w-20 input-sm mx-2': true,
+                            'input-error': state.errorInPageNumber,
+                        })}
                         defaultValue={table.getState().pagination.pageIndex + 1}
                         type="number"
                         onChange={(e) => {
-                            const page = e.target.value ? Number(e.target.value) - 1 : 0
-                            updateState(() => { return { pageIndex: page } })
+                            const pageIndex = e.target.value ? Number(e.target.value) - 1 : 0
+                            if (invalidPageIndex(pageIndex)) {
+                                updateState(() => { return { errorInPageNumber: true } })
+                            } else {
+                                updateState(() => { return { pageIndex, errorInPageNumber: false } })
+                            }
                         }}
-                        className="input input-bordered w-20 input-sm mx-2"
                     />
                 </span>
                 {/* select to input page size */}
