@@ -22,7 +22,7 @@ export const TransactionReportBody: React.FC<TransactionReportBodyProps> = ({ cl
         <div className={className}>
             <TransactionTable filters={_useTransactionFilter(filter)}
                 graphQuery={GET_TRANSACTIONS}
-                queryResultToDataMapper={(result) => result && result.data ? result.data.transactionsRelayConnection.edges.map((node: any) => _nodeToTransaction(node.node)): []}
+                queryResultDataMapper={(result) => result && result.data ? result.data.transactionsRelayConnection.edges.map((node: any) => _nodeToTransaction(node.node)): []}
                 columnDefs={transactionColumnDefs} />
         </div>
     )
