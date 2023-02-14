@@ -39,7 +39,7 @@ export const InputDateRangeField: React.FC<InputDateRangeFieldProps> = ({ classN
 
     return (
         <div className={className}>
-            <div className="input-group flex xs:flex-col sm:flex-col pr-3">
+            <div className="input-group flex xs:flex-col sm:flex-col md:flex-col pr-3">
                 <p tabIndex={0} className="mt-3 mr-2 text-left">{label}</p>
                 <div className="flex flex-row">
                     <Datepicker i18n="ru"
