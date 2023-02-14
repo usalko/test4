@@ -1,7 +1,7 @@
 import cn from 'classnames'
 
 import React, { useState } from 'react'
-import Datepicker from "react-tailwindcss-datepicker"
+import Datepicker from 'react-tailwindcss-datepicker'
 import { DateValueType } from 'react-tailwindcss-datepicker/dist/types'
 
 
@@ -39,64 +39,65 @@ export const InputDateRangeField: React.FC<InputDateRangeFieldProps> = ({ classN
 
     return (
         <div className={className}>
-            <div className="input-group pr-3">
+            <div className="input-group flex xs:flex-col pr-3">
                 <p tabIndex={0} className="mt-3 mr-2 text-left">{label}</p>
-                <Datepicker i18n="ru"
-                    asSingle={false}
-                    displayFormat="DD.MM.YYYY"
-                    primaryColor={"violet"} // TODO: fork and fix react-tailwindcss-datepicker, at this time this library unsupported daisy-ui themes
-                    containerClassName="z-20 w-fit"
-                    classNames={{
-                        container: (p) => {
-                            return ''
-                        },
-                        input: (p) => {
-                            return `input input-bordered pr-0 mr-0 ${inputClassName}`
-                        },
-                        toggleButton: (p) => {
-                            return 'hidden'
-                        },
-                        footer: (p) => {
-                            return 'hidden'
-                        },
-                    }}
-                    useRange={true}
-                    value={state.value}
-                    onChange={async (value) => {
-                        const newValue = { startDate: _asDate(value?.startDate), finishDate: _asDate(value?.endDate) }
-                        setState({ ...state, value: { startDate: newValue.startDate!, endDate: newValue.finishDate! } })
-                        if (onChangeValue) {
-                            onChangeValue(newValue)
-                        }
-                    }} />
-                <button className={`${'btn btn-ghost border-opacity-20 pl-1 pr-2'} ${cn({
-                    'invisible': !(state.value?.startDate && state.value?.endDate)
-                })}`}
-                    onClick={(event) => {
-                        if (onChangeValue) {
-                            onChangeValue({})
-                        }
-                        setState((state) => { return { ...state, value: { startDate: null, endDate: null } } })
-                    }}>
-                    <svg
-                        xmlns="http://www.w3.org/2000/svg"
-                        className="h-7 w-7"
-                        fill="none"
-                        viewBox="0 0 20 24"
-                        width="20"
-                        height="24"
-                        stroke="currentColor"
-                        opacity={state.value?.startDate || state.value?.endDate ? 0.4 : 0}
-                        strokeWidth="1"
-                    >
-                        <path
-                            strokeLinecap="square"
-                            strokeLinejoin="miter"
-                            d="m 10,14 2,-2 m 0,0 2,-2 m -2,2 -2,-2 m 2,2 2,2 M 1,12 7.414,18.414 A 2,2 0 0 0 8.828,19 H 17 a 2,2 0 0 0 2,-2 V 7 A 2,2 0 0 0 17,5 H 8.828 A 2,2 0 0 0 7.414,5.586 Z"
-                            id="path2" />
-                    </svg>
-                </button>
-
+                <div className="flex flex-row">
+                    <Datepicker i18n="ru"
+                        asSingle={false}
+                        displayFormat="DD.MM.YYYY"
+                        primaryColor={'violet'} // TODO: fork and fix react-tailwindcss-datepicker, at this time this library unsupported daisy-ui themes
+                        containerClassName="z-20 w-fit"
+                        classNames={{
+                            container: (p) => {
+                                return ''
+                            },
+                            input: (p) => {
+                                return `input input-bordered pr-0 mr-0 ${inputClassName}`
+                            },
+                            toggleButton: (p) => {
+                                return 'hidden'
+                            },
+                            footer: (p) => {
+                                return 'hidden'
+                            },
+                        }}
+                        useRange={true}
+                        value={state.value}
+                        onChange={async (value) => {
+                            const newValue = { startDate: _asDate(value?.startDate), finishDate: _asDate(value?.endDate) }
+                            setState({ ...state, value: { startDate: newValue.startDate!, endDate: newValue.finishDate! } })
+                            if (onChangeValue) {
+                                onChangeValue(newValue)
+                            }
+                        }} />
+                    <button className={`${'btn btn-ghost border-opacity-20 pl-1 pr-2'} ${cn({
+                        'invisible': !(state.value?.startDate && state.value?.endDate)
+                    })}`}
+                        onClick={(event) => {
+                            if (onChangeValue) {
+                                onChangeValue({})
+                            }
+                            setState((state) => { return { ...state, value: { startDate: null, endDate: null } } })
+                        }}>
+                        <svg
+                            xmlns="http://www.w3.org/2000/svg"
+                            className="h-7 w-7"
+                            fill="none"
+                            viewBox="0 0 20 24"
+                            width="20"
+                            height="24"
+                            stroke="currentColor"
+                            opacity={state.value?.startDate || state.value?.endDate ? 0.4 : 0}
+                            strokeWidth="1"
+                        >
+                            <path
+                                strokeLinecap="square"
+                                strokeLinejoin="miter"
+                                d="m 10,14 2,-2 m 0,0 2,-2 m -2,2 -2,-2 m 2,2 2,2 M 1,12 7.414,18.414 A 2,2 0 0 0 8.828,19 H 17 a 2,2 0 0 0 2,-2 V 7 A 2,2 0 0 0 17,5 H 8.828 A 2,2 0 0 0 7.414,5.586 Z"
+                                id="path2" />
+                        </svg>
+                    </button>
+                </div>
             </div>
         </div>
     )

@@ -1,5 +1,5 @@
 import React from 'react'
-import Datepicker from "react-tailwindcss-datepicker"
+import Datepicker from 'react-tailwindcss-datepicker'
 
 
 export interface InputDateFieldProps {
