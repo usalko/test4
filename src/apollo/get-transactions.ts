@@ -68,11 +68,12 @@ export const _useTransactionFilter = (filter: TransactionReportFilter | undefine
  *   }
  */
 
-export const GET_TRANSACTIONS = gql`query TransactionsWithCursorPagination ($filters: TransactionFilters!, $cursor: String!, $pageSize: Int!) {
+export const GET_TRANSACTIONS = gql`query TransactionsWithCursorPagination ($cursor: String!, $pageSize: Int!, $filters: TransactionFilters!, $order: TransactionOrder!) {
     transactionsRelayConnection(
     after: $cursor
     first: $pageSize
     filters: $filters
+    order: $order
   ) {
     pageInfo {
       startCursor
@@ -83,6 +84,7 @@ export const GET_TRANSACTIONS = gql`query TransactionsWithCursorPagination ($fil
     totalCount
     edges {
       node {
+        id
         date
         cardNumber
         ticketType
