@@ -1,5 +1,6 @@
 import { ColumnDef, createColumnHelper } from '@tanstack/react-table'
 import { Transaction } from '../../model/Transaction'
+import { ReactComponent as PaymentTrue } from './payment-true.svg'
 
 
 const columnHelper = createColumnHelper<Transaction>()
@@ -27,7 +28,9 @@ export const userColumnDefs: ColumnDef<Transaction, any>[] = [
     }),
     columnHelper.accessor((row) => row.paymentFact, {
         id: 'paymentFact',
-        cell: (info) => <span>{info.getValue()}</span>,
+        cell: (info) => <span>{
+            info.getValue() ? (<PaymentTrue />) : ''
+        }</span>,
         header: () => <span>Факт оплаты:</span>,
     }),
     columnHelper.accessor((row) => row.routeCode, {
