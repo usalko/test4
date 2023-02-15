@@ -3,6 +3,7 @@ import {
     PaginationState,
     RowData,
     SortingState,
+    Updater,
     flexRender,
     getCoreRowModel,
     getPaginationRowModel,
@@ -25,19 +26,19 @@ const defaultTotalCount = (result: QueryResult<any, any>) => {
 const defaultReverseColumnMapper = (columnDefs: ColumnDef<any, any>[], graphQuery: DocumentNode | TypedDocumentNode) => {
     const fields = Object.fromEntries(((graphQuery.definitions[0] as any).selectionSet.selections[0].selectionSet.selections[2].selectionSet.selections[0].selectionSet.selections).map((entry: any) => [entry.name.value, entry.selectionSet]))
     const result = Object.fromEntries(columnDefs.filter((column: any) => column.id in fields).map((column: any) => [column.id,
-        fields[column.id] ? [column.id, fields[column.id].selections[0].name.value] : [column.id]
+    fields[column.id] ? [column.id, fields[column.id].selections[0].name.value] : [column.id]
     ]))
     return result
 }
 // Mapping sorting state to order object
 const _orderFromSorting = (sorting: SortingState, reverseColumnMap: any): any => {
-    return Object.fromEntries(sorting.filter((entry) => entry.id in reverseColumnMap).map((entry) => {
+    return sorting && sorting.length > 0 ? Object.fromEntries(sorting.filter((entry) => entry.id in reverseColumnMap).map((entry) => {
         const propertyPath = reverseColumnMap[entry.id]
         if (propertyPath.length > 1) {
             return [entry.id, JSON.parse(`{${propertyPath[1]}: ${entry.desc ? 'DESC' : 'ASC'}}`)] // Perhaps not working, please recheck
         }
         return [entry.id, entry.desc ? 'DESC' : 'ASC']
-    }))
+    })) : {}
 }
 
 
@@ -123,7 +124,9 @@ const DataTable = <T extends RowData>() => {
             },
             onSortingChange: setSorting,
             manualPagination: true,
-            pageCount
+            pageCount,
+            manualSorting: true,
+            enableMultiSort: true,
         })
         const headers = table.getFlatHeaders()
         const rows = table.getRowModel().rows
@@ -137,7 +140,19 @@ const DataTable = <T extends RowData>() => {
                                     <th key={header.id}>
                                         {header.isPlaceholder ? null : (
                                             <div
-                                                onClick={header.column.getToggleSortingHandler()}
+                                                onClick={(event) => {
+                                                    setSorting((sortingState) => {
+                                                        const oldColumnSortingState = sortingState.filter((e) => e.id === header.column.id)
+                                                        if (oldColumnSortingState.length > 0 && !oldColumnSortingState[0].desc) {
+                                                            return [...sortingState.filter((e) => e.id !== header.column.id)]
+                                                        } else if (oldColumnSortingState.length > 0) {
+                                                            oldColumnSortingState[0].desc = false
+                                                            return [...sortingState]
+                                                        } else {
+                                                            return [...sortingState, {id: header.column.id, desc: true}]
+                                                        }
+                                                    })
+                                                }}
                                                 className="cursor-pointer flex gap-4"
                                             >
                                                 {flexRender(
