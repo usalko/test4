@@ -1,4 +1,7 @@
 # Example of simple report with filters and sorting
-[Presented at https://test4.qstand.art](https://test4.qstand.art)
 
-
+Technologies stack:
+ - Django 4
+ - React.js
+ - Typescript
+ - Daisy-ui
